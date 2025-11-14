@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QApplication
 from StyleSheet import StyleSheet
 from qt_classes.GUI import GUI
 
+from petriNet import PetriNet
 
 def main():
     app = QApplication([])
