@@ -86,9 +86,9 @@ class GUI(QMainWindow):
         hbox_layout1 = QHBoxLayout()
 
         vbox_layout1 = QVBoxLayout()
-        body_counter_label = self.create_label(f"Wczytanych korpusów: 0")
-        production_counter_label = self.create_label(f"Korpusów w produkcji: 0")
-        finished_bodys_label = self.create_label(f"Wyprodukowanych korpusów: 0")
+        body_counter_label = self.create_label("Wczytanych korpusów: 0")
+        production_counter_label = self.create_label("Korpusów w produkcji: 0")
+        finished_bodys_label = self.create_label("Wyprodukowanych korpusów: 0")
         vbox_layout1.addWidget(body_counter_label)
         vbox_layout1.addWidget(production_counter_label)
         vbox_layout1.addWidget(finished_bodys_label)

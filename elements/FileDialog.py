@@ -1,5 +1,3 @@
-import os
-
 from PyQt5.QtWidgets import (
     QWidget,
     QLabel,
@@ -13,7 +11,6 @@ class FileDialog(QWidget):
         self.label = label
 
     def show_file_dialog(self):
-        home_dir = os.environ.get('HOME')
 
         options = QFileDialog.Options()
         read_file_name, _ = QFileDialog.getOpenFileName(
