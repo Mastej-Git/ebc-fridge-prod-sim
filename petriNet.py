@@ -20,13 +20,13 @@ class ArcOut(ArcBase): # FROM PLACE
 
 class ArcIn(ArcBase): # TO PLACE
     def trigger(self):
-        self.place.num_tokens += self.weight # Remove set number of tokens
+        self.place.num_tokens += self.weight
 
 class Transition:
-    def __init__(self, out_arcs : list[ArcOut], in_arcs : list[ArcIn]):
+    def __init__(self, out_arcs : list[ArcOut], in_arcs : list[ArcIn], name: str = None):
         # self.in_arcs: list = out_arcs
+        self.name = name
         self.out_arcs: list[ArcOut] = out_arcs
-
         self.arcs = self.out_arcs + in_arcs
 
     def fire(self) -> bool:
@@ -43,9 +43,20 @@ class PetriNet:
     def __init__(self, transitions: list[Transition] = None):
         self.transitions : list[Transition] = transitions
     
-    def solve_one_loop(self):
+    def solve_one_loop(self) -> bool: # Can be used to iterate until no options are available
+        sth_fired : bool = False
         for t in self.transitions:
-            t.fire()
+            if t.fire():
+                sth_fired = True
+        return sth_fired
+
+    def get_current_description(self) -> str:
+        description: str = ""
+        for t in self.transitions:
+            for a in t.arcs:
+                description += f'{a.place.name}:{a.place.num_tokens}; '
+                # print(f'{a.place.name}:{a.place.num_tokens};', end=" ")
+        return description
 
 
 p1 = Place("P1","p1_test",1)
@@ -56,9 +67,14 @@ a1 = ArcOut(p1,1)
 a2 = ArcOut(p2,2)
 a3 = ArcIn(p3,1)
 
-t1 = Transition([a1,a2], [a3])
-
+t1 = Transition([a1,a2], [a3], "T1")
 
 p_net = PetriNet([t1])
-p_net.solve_one_loop()
+
+print(p_net.get_current_description())
+while p_net.solve_one_loop():
+    print(p_net.get_current_description())
+    # p_net.print_current_description()
+
+
 
