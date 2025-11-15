@@ -1,16 +1,19 @@
 from PyQt5.QtWidgets import (
-    QMainWindow, 
-    QTabWidget, 
-    QWidget, 
+    QMainWindow,
+    QTabWidget,
+    QWidget,
     QVBoxLayout,
     QHBoxLayout,
     QLabel,
     QGroupBox,
-    QFrame
+    QFrame,
+    QTextEdit
 )
 from qt_classes.AnimatedButton import AnimatedButton
 from StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
+from utils.json_parser import parse_bodys_json
+import os
 
 class GUI(QMainWindow):
 
@@ -31,7 +34,7 @@ class GUI(QMainWindow):
         self.tab2 = QWidget()
         self.tab3 = QWidget()
         self.tabs.addTab(self.tab1, "Tab 1")
-        self.tabs.addTab(self.tab2, "Tab 2")
+        self.tabs.addTab(self.tab2, "Loaded Elements")
         self.tabs.addTab(self.tab3, "Tab 3")
 
         self.create_tab_content()
@@ -43,12 +46,8 @@ class GUI(QMainWindow):
         sub_tab_widget.setTabPosition(QTabWidget.West)
         sub_tab_widget.setStyleSheet(StyleSheet.SubTab.value)
 
-        self.create_dial_tab()        
-        # layout1 = QVBoxLayout()
-        # self.tab1.setLayout(layout1)
-
-        layout2 = QVBoxLayout()
-        self.tab2.setLayout(layout2)
+        self.create_dial_tab()
+        self.create_loaded_elements_tab()
 
         layout3 = QVBoxLayout()
         self.tab3.setLayout(layout3)
@@ -113,9 +112,34 @@ class GUI(QMainWindow):
         layout1.addWidget(group_box1)
         self.tab1.setLayout(layout1)
 
+    def create_loaded_elements_tab(self):
+        """Create the Loaded Elements tab with JSON display."""
+        layout2 = QVBoxLayout()
+
+        # Text box to display parsed JSON
+        self.elements_text_box = QTextEdit()
+        self.elements_text_box.setReadOnly(True)
+        self.elements_text_box.setStyleSheet("""
+            QTextEdit {
+                background-color: #2d2d2d;
+                color: #00ffff;
+                border: 1px solid #404040;
+                padding: 10px;
+                font-family: monospace;
+                font-size: 11pt;
+            }
+        """)
+
+        # Load and parse the bodys.json file
+        json_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bodys.json')
+        parsed_content = parse_bodys_json(json_path)
+        self.elements_text_box.setText(parsed_content)
+
+        layout2.addWidget(self.elements_text_box)
+        self.tab2.setLayout(layout2)
+
     def create_label(self, label_str: str, maximuxm_height: int = 70) -> QLabel:
         label = QLabel(label_str)
         label.setStyleSheet(StyleSheet.QLabel.value)
         label.setMaximumHeight(maximuxm_height)
         return label
-        
