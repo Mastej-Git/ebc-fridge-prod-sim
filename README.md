@@ -7,8 +7,16 @@ To run application first make sure that you have `Poetry` and `Python3.10`.
 Then use below commands:
 
 ```shell
-$ poetry env use python3.13
-$ poetry install --no-root
+$ make setup-env
 $ poetry env activate
 (venv) $ poetry run make run
+```
+
+## Ruff
+
+To run ruff check and ruff fix
+
+```shell
+(venv) $ make ruff_check
+(venv) $ make ruff_fix
 ```

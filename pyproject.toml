@@ -1,5 +1,6 @@
 [tool.poetry]
-name = "fridge-production-simulation"
+package-mode = false
+name = "ebc-fridge-prod-sim"
 version = "0.1.0"
 description = ""
 authors = [
@@ -16,6 +17,10 @@ pylint = "^3.2.6"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
 ruff = "^0.12.10"
+
+[tool.poetry.scripts]
+# Expose a runnable entry point so users can run the app with `poetry run ebc-fridge-prod-sim`
+ebc-fridge-prod-sim = "main:main"
 
 [build-system]
 requires = ["poetry-core"]
