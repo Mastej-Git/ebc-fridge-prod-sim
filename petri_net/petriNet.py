@@ -42,8 +42,20 @@ class Transition:
 class PetriNet:
     def __init__(self, transitions: list[Transition] = None):
         self.transitions : list[Transition] = transitions
-    
-    def solve_one_loop(self) -> bool: # Can be used to iterate until no options are available
+        self._places : dict[str, Place] = {} # Just for getting places through a name key
+
+        # Build the places dictionary
+        if transitions:
+            for t in transitions:
+                for arc in t.arcs:
+                    if arc.place.name not in self._places:
+                        self._places[arc.place.name] = arc.place
+
+    def get_place(self, place_name: str) -> Place:
+        return self._places.get(place_name)
+
+    def solve_one_iteration(self) -> bool:
+        """Can be used to iterate through the net until no firing options are available"""
         sth_fired : bool = False
         for t in self.transitions:
             if t.fire():
@@ -52,29 +64,9 @@ class PetriNet:
 
     def get_current_description(self) -> str:
         description: str = ""
-        for t in self.transitions:
-            for a in t.arcs:
-                description += f'{a.place.name}:{a.place.num_tokens}; '
-                # print(f'{a.place.name}:{a.place.num_tokens};', end=" ")
+        for place in self._places.values():
+            description += f'{place.name}:{place.num_tokens}; '
         return description
-
-
-p1 = Place("P1","p1_test",1)
-p2 = Place("P2","p2_test",4)
-p3 = Place("P3","p3_test",0)
-
-a1 = ArcOut(p1,1)
-a2 = ArcOut(p2,2)
-a3 = ArcIn(p3,1)
-
-t1 = Transition([a1,a2], [a3], "T1")
-
-p_net = PetriNet([t1])
-
-print(p_net.get_current_description())
-while p_net.solve_one_loop():
-    print(p_net.get_current_description())
-    # p_net.print_current_description()
 
 
 
