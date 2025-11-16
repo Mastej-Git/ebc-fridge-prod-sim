@@ -10,20 +10,19 @@ class ArcBase:
         self.place : Place = place
         self.weight : int = weight
        
-class ArcOut(ArcBase): # FROM PLACE
+class ArcOut(ArcBase):
     def trigger(self):
-        self.place.num_tokens -= self.weight # Remove set number of tokens
+        self.place.num_tokens -= self.weight
 
     def can_trigger(self) -> bool:
         return self.place.num_tokens >= self.weight
 
-class ArcIn(ArcBase): # TO PLACE
+class ArcIn(ArcBase):
     def trigger(self):
         self.place.num_tokens += self.weight
 
 class Transition:
     def __init__(self, out_arcs : list[ArcOut], in_arcs : list[ArcIn], name: str = None):
-        # self.in_arcs: list = out_arcs
         self.name = name
         self.out_arcs: list[ArcOut] = out_arcs
         self.arcs = self.out_arcs + in_arcs
@@ -41,9 +40,8 @@ class Transition:
 class PetriNet:
     def __init__(self, transitions: list[Transition] = None):
         self.transitions : list[Transition] = transitions
-        self._places : dict[str, Place] = {} # Just for getting places through a name key
+        self._places : dict[str, Place] = {}
 
-        # Build the places dictionary so that they can be accessed by their name
         if transitions:
             for t in transitions:
                 for arc in t.arcs:
@@ -67,6 +65,3 @@ class PetriNet:
         for place in self._places.values():
             description += f'{place.name}:{place.num_tokens}; '
         return description
-
-
-
