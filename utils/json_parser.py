@@ -1,27 +1,30 @@
 import json
 from typing import List, Dict, Any
 
-def parse_bodys_json(file_path: str) -> str:
+# VIBE CODED SHIT FOR LOADING CAR DATA AT FIRST
+def parse_bodys_json(file_path: str) -> List[Dict[str, Any]]:
     """
-    Parse bodys.json file and format it for display.
+    Parse bodys.json file and return structured data.
 
     Args:
         file_path: Path to the JSON file
 
     Returns:
-        Formatted string representation of the parsed JSON data
+        List of body configurations or empty list on error
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-
-        return format_bodys_data(data)
+        return data
     except FileNotFoundError:
-        return f"Error: File not found at {file_path}"
+        print(f"Error: File not found at {file_path}")
+        return []
     except json.JSONDecodeError as e:
-        return f"Error: Invalid JSON format - {str(e)}"
+        print(f"Error: Invalid JSON format - {str(e)}")
+        return []
     except Exception as e:
-        return f"Error: {str(e)}"
+        print(f"Error: {str(e)}")
+        return []
 
 def format_bodys_data(data: List[Dict[str, Any]]) -> str:
     """

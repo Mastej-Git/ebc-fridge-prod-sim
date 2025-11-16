@@ -1,4 +1,3 @@
-import numpy as np
 
 class Place:
     def __init__(self, name: str, description: str, token_num: int):
@@ -44,7 +43,7 @@ class PetriNet:
         self.transitions : list[Transition] = transitions
         self._places : dict[str, Place] = {} # Just for getting places through a name key
 
-        # Build the places dictionary
+        # Build the places dictionary so that they can be accessed by their name
         if transitions:
             for t in transitions:
                 for arc in t.arcs:
@@ -63,6 +62,7 @@ class PetriNet:
         return sth_fired
 
     def get_current_description(self) -> str:
+        """Prints current number of tokens in each place"""
         description: str = ""
         for place in self._places.values():
             description += f'{place.name}:{place.num_tokens}; '
