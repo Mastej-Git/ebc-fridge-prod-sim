@@ -246,10 +246,10 @@ class GUI(QMainWindow):
         """Load JSON file and print its content to terminal."""
         file_path = self.file_dialog.get_file_path()
 
-
+        # If no file selected, use default bodys.json
         if not file_path or not os.path.isfile(file_path):
             file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bodys.json')
-            print("No file selected, loading default bodys.json")
+            print("WARNING: No file selected, loading default bodys.json")
             
             if not os.path.isfile(file_path):
                 self.body_detail_text.setText("No valid JSON file found!")
@@ -260,19 +260,15 @@ class GUI(QMainWindow):
         print(f"Loading JSON file: {file_path}")
         print("="*80)
 
-        # Load and parse the JSON data
         self.bodies_data = parse_bodys_json(file_path)
 
-        # Print the raw JSON content to terminal
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                json_content = json.load(f)
-                print("\nJSON Content:")
-                print(json.dumps(json_content, indent=2, ensure_ascii=False))
-        except Exception as e:
-            print(f"Error reading JSON file: {e}")
+        # Print the json
+        print("\nJSON Content:\n")
+        for idx, body_item in enumerate(self.bodies_data, 1):
+            print(self.format_body_details(body_item, idx))
+            print()
 
-        # Update the file dialog label if the method exists
+        # Update the file dialog label
         if hasattr(self.file_dialog, 'update_label_text'):
             self.file_dialog.update_label_text()
         elif hasattr(self.file_dialog, 'label'):
