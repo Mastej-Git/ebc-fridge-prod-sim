@@ -18,6 +18,7 @@ from StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
 from utils.json_parser import parse_bodys_json
 import os
+import json
 
 class GUI(QMainWindow):
 
@@ -74,7 +75,7 @@ class GUI(QMainWindow):
         chose_file_button.clicked.connect(self.file_dialog.show_file_dialog)
 
         read_file_button = AnimatedButton("Wczytaj")
-        # read_file_button.clicked.connect(self.pb_read_json)
+        read_file_button.clicked.connect(self.pb_read_json)  # Connected now!
 
         vbox_layout.addWidget(chose_file_button)
         vbox_layout.addWidget(read_file_button)
@@ -242,21 +243,48 @@ class GUI(QMainWindow):
         return label
     
     def pb_read_json(self):
+        """Load JSON file and print its content to terminal."""
         file_path = self.file_dialog.get_file_path()
 
+        # If no file selected, use default bodys.json
         if not file_path or not os.path.isfile(file_path):
-            self.body_detail_text.setText("❌ No valid JSON file selected!")
-            return
+            file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bodys.json')
+            print("⚠ No file selected, loading default bodys.json")
+            
+            if not os.path.isfile(file_path):
+                self.body_detail_text.setText("❌ No valid JSON file found!")
+                print("❌ ERROR: Default bodys.json file not found!")
+                return
 
+        print("\n" + "="*80)
+        print(f"📄 Loading JSON file: {file_path}")
+        print("="*80)
+
+        # Load and parse the JSON data
         self.bodies_data = parse_bodys_json(file_path)
 
-        self.file_dialog.update_label_text()
+        # Print the raw JSON content to terminal
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                json_content = json.load(f)
+                print("\n📋 JSON Content:")
+                print(json.dumps(json_content, indent=2, ensure_ascii=False))
+        except Exception as e:
+            print(f"❌ Error reading JSON file: {e}")
 
+        # Update the file dialog label if the method exists
+        if hasattr(self.file_dialog, 'update_label_text'):
+            self.file_dialog.update_label_text()
+        elif hasattr(self.file_dialog, 'label'):
+            # Manually update the label if update_label_text doesn't exist
+            self.file_dialog.label.setText(f"Loaded: {os.path.basename(file_path)}")
+
+        # Update the GUI list
         self.bodies_list.clear()
         for idx in range(len(self.bodies_data)):
             self.bodies_list.addItem(f"body_{idx + 1}")
 
         self.body_detail_text.setText("Select a body from the list to view details")
 
-        print(f"✔ Loaded JSON from: {file_path}")
-
+        print(f"\n✔ Successfully loaded {len(self.bodies_data)} body configurations")
+        print("="*80 + "\n")
