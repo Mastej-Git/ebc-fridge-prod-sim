@@ -27,7 +27,7 @@ class FileDialog(QWidget):
 
         self.selected_file_path = ""
         self.label.setText(
-            f"❌ Zły format pliku! Oczekiwany: .json\n\nWybrano:\n{file_path}"
+            f"Zły format pliku! Oczekiwany: .json\n\nWybrano:\n{file_path}"
         )
         return ""
 

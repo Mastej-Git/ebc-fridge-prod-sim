@@ -246,18 +246,18 @@ class GUI(QMainWindow):
         """Load JSON file and print its content to terminal."""
         file_path = self.file_dialog.get_file_path()
 
-        # If no file selected, use default bodys.json
+
         if not file_path or not os.path.isfile(file_path):
             file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bodys.json')
-            print("⚠ No file selected, loading default bodys.json")
+            print("No file selected, loading default bodys.json")
             
             if not os.path.isfile(file_path):
-                self.body_detail_text.setText("❌ No valid JSON file found!")
-                print("❌ ERROR: Default bodys.json file not found!")
+                self.body_detail_text.setText("No valid JSON file found!")
+                print("ERROR: Default bodys.json file not found!")
                 return
 
         print("\n" + "="*80)
-        print(f"📄 Loading JSON file: {file_path}")
+        print(f"Loading JSON file: {file_path}")
         print("="*80)
 
         # Load and parse the JSON data
@@ -267,16 +267,15 @@ class GUI(QMainWindow):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 json_content = json.load(f)
-                print("\n📋 JSON Content:")
+                print("\nJSON Content:")
                 print(json.dumps(json_content, indent=2, ensure_ascii=False))
         except Exception as e:
-            print(f"❌ Error reading JSON file: {e}")
+            print(f"Error reading JSON file: {e}")
 
         # Update the file dialog label if the method exists
         if hasattr(self.file_dialog, 'update_label_text'):
             self.file_dialog.update_label_text()
         elif hasattr(self.file_dialog, 'label'):
-            # Manually update the label if update_label_text doesn't exist
             self.file_dialog.label.setText(f"Loaded: {os.path.basename(file_path)}")
 
         # Update the GUI list
@@ -286,5 +285,5 @@ class GUI(QMainWindow):
 
         self.body_detail_text.setText("Select a body from the list to view details")
 
-        print(f"\n✔ Successfully loaded {len(self.bodies_data)} body configurations")
+        print(f"\nSuccessfully loaded {len(self.bodies_data)} body configurations")
         print("="*80 + "\n")
