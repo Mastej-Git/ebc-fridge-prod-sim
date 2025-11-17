@@ -68,13 +68,13 @@ class GUI(QMainWindow):
         hbox_layout = QHBoxLayout()
         vbox_layout = QVBoxLayout()
 
-        read_file_button = AnimatedButton("Wczytaj")
-        # read_file_button.clicked.connect(self.pb_read_json)
-
         self.file_dialog = FileDialog(label)
 
         chose_file_button = AnimatedButton("Wybierz plik")
-        # chose_file_button.clicked.connect(self.pb_chose_file)
+        chose_file_button.clicked.connect(self.file_dialog.show_file_dialog)
+
+        read_file_button = AnimatedButton("Wczytaj")
+        # read_file_button.clicked.connect(self.pb_read_json)
 
         vbox_layout.addWidget(chose_file_button)
         vbox_layout.addWidget(read_file_button)
@@ -84,7 +84,6 @@ class GUI(QMainWindow):
 
         group_box2 = QGroupBox("Panel kontrolny")
         group_box2.setFixedHeight(600)
-
 
         hbox_layout1 = QHBoxLayout()
 
@@ -100,10 +99,8 @@ class GUI(QMainWindow):
         self.label_tmp = self.create_label("Brak wybranej ilości")
         vbox_layout2.addWidget(self.label_tmp)
         chose_value_button = AnimatedButton("Wybierz ilość")
-        # chose_value_button.clicked.connect(self.pb_input_dialog)
         vbox_layout2.addWidget(chose_value_button)
         produce_button = AnimatedButton("Produkuj")
-        # produce_button.clicked.connect(self.pb_produce)
         vbox_layout2.addWidget(produce_button)
 
         hbox_layout1.addLayout(vbox_layout1)
@@ -243,3 +240,23 @@ class GUI(QMainWindow):
         label.setStyleSheet(StyleSheet.QLabel.value)
         label.setMaximumHeight(maximuxm_height)
         return label
+    
+    def pb_read_json(self):
+        file_path = self.file_dialog.get_file_path()
+
+        if not file_path or not os.path.isfile(file_path):
+            self.body_detail_text.setText("❌ No valid JSON file selected!")
+            return
+
+        self.bodies_data = parse_bodys_json(file_path)
+
+        self.file_dialog.update_label_text()
+
+        self.bodies_list.clear()
+        for idx in range(len(self.bodies_data)):
+            self.bodies_list.addItem(f"body_{idx + 1}")
+
+        self.body_detail_text.setText("Select a body from the list to view details")
+
+        print(f"✔ Loaded JSON from: {file_path}")
+
