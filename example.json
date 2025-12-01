@@ -1,0 +1,35 @@
+{
+    "body": {
+        "cover" : {
+            "including_freezer" : "True/False",
+            "material" : "Steel / alluminium",
+            "color" : "Kurwa do wyboru:"
+        },
+        "doors" : {
+            "material" : "Steel / alluminium",
+            "color" : "Kurwa do wyboru:",
+            "ice_machine" : "True/False",
+            "water_machine" : "True/False",
+            "front_panel" : "True/False"
+        },
+        "shelves" : {
+            "material" : "Plastic / Glass",
+            "number" : "Kurwa do wyboru:",
+            "adjustable_height" : "True/False",
+            "removable" : "True/False"
+        },
+        "cooling_system" : {
+            "including_freezer" : "True/False",
+            "type" : "No-Frost / Frost-Free / Static",
+            "energy_class" : "A+++ / A++ / A+ / B"
+        },
+        "lighting" : {
+            "internal_lights" : "LED / Fluorescent",
+            "automatic_light_on" : "True/False"
+        },
+        "additional_features" : {
+            "door_alarm" : "True/False",
+            "wifi_connected" : "True/False"
+        }
+    }
+}

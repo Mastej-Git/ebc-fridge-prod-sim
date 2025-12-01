@@ -9,8 +9,10 @@ from PyQt5.QtWidgets import (
     QFrame
 )
 from qt_classes.AnimatedButton import AnimatedButton
+from qt_classes.GanttChart import GanttChart
 from StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
+from PyQt5.QtCore import Qt
 
 class GUI(QMainWindow):
 
@@ -32,7 +34,7 @@ class GUI(QMainWindow):
         self.tab3 = QWidget()
         self.tabs.addTab(self.tab1, "Tab 1")
         self.tabs.addTab(self.tab2, "Tab 2")
-        self.tabs.addTab(self.tab3, "Tab 3")
+        self.tabs.addTab(self.tab3, "Gantt tab")
 
         self.create_tab_content()
         layout.addWidget(self.tabs)
@@ -53,6 +55,23 @@ class GUI(QMainWindow):
         layout3 = QVBoxLayout()
         self.tab3.setLayout(layout3)
 
+        self.create_gantt_tab()  # <-- dodajemy treść do taba 3
+
+    def create_gantt_tab(self):
+        layout = self.tab3.layout()
+        if layout is None:
+            layout = QVBoxLayout()
+            self.tab3.setLayout(layout)
+
+        example_tasks = [
+            {"task": "Design", "start": 0, "end": 3},
+            {"task": "Implementation", "start": 2, "end": 6},
+            {"task": "Testing", "start": 5, "end": 8},
+            {"task": "Deployment", "start": 7, "end": 9},
+        ]
+        gantt_widget = GanttChart(example_tasks)
+        layout.addWidget(gantt_widget)
+        
     def create_dial_tab(self):
 
         layout1 = QVBoxLayout()
