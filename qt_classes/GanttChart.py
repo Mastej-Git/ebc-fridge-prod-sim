@@ -9,21 +9,19 @@ class GanttChart(QWidget):
 
         layout = QVBoxLayout(self)
 
-        # Tworzymy figure z ciemnym tłem
-        self.figure = Figure(figsize=(6, 4), facecolor="#2e2e2e")  # tło figury
+        self.figure = Figure(figsize=(6, 4), facecolor="#2e2e2e")
         self.canvas = FigureCanvas(self.figure)
         layout.addWidget(self.canvas)
 
-        # Rysujemy wykres
         self.plot_gantt()
 
     def plot_gantt(self):
         ax = self.figure.add_subplot(111)
         ax.clear()
-        ax.set_facecolor("#2e2e2e")  # tło osi
+        ax.set_facecolor("#2e2e2e")
 
         if not self.tasks:
-            ax.text(0.5, 0.5, "Brak danych do wyświetlenia",
+            ax.text(0.5, 0.5, "No data to plot",
                     ha='center', va='center', transform=ax.transAxes, color="white")
             self.canvas.draw()
             return
@@ -32,13 +30,11 @@ class GanttChart(QWidget):
         start_times = [t["start"] for t in self.tasks]
         durations = [t["end"] - t["start"] for t in self.tasks]
 
-        # Paski Gantta jasnoniebieskie
         ax.barh(y_labels, durations, left=start_times, color="#87CEFA")
-        ax.set_xlabel("Czas", color="white")
-        ax.set_ylabel("Zadania", color="white")
-        ax.set_title("Wykres Gantta", color="white")
+        ax.set_xlabel("Time", color="white")
+        ax.set_ylabel("Task", color="white")
+        ax.set_title("Gantt Chart", color="white")
 
-        # Kolory osi
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
         for spine in ax.spines.values():
