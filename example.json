@@ -3,18 +3,18 @@
         "cover" : {
             "including_freezer" : "True/False",
             "material" : "Steel / alluminium",
-            "color" : "Kurwa do wyboru:"
+            "color" : "Red / Green / Blue"
         },
         "doors" : {
             "material" : "Steel / alluminium",
-            "color" : "Kurwa do wyboru:",
+            "color" : "Red / Green / Blue",
             "ice_machine" : "True/False",
             "water_machine" : "True/False",
             "front_panel" : "True/False"
         },
         "shelves" : {
             "material" : "Plastic / Glass",
-            "number" : "Kurwa do wyboru:",
+            "number" : "Red / Green / Blue",
             "adjustable_height" : "True/False",
             "removable" : "True/False"
         },
