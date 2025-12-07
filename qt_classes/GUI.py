@@ -32,7 +32,7 @@ class GUI(QMainWindow):
         self.tab1 = QWidget()
         self.tab2 = QWidget()
         self.tab3 = QWidget()
-        self.tabs.addTab(self.tab1, "Tab 1")
+        self.tabs.addTab(self.tab1, "Control Tab")
         self.tabs.addTab(self.tab2, "Tab 2")
         self.tabs.addTab(self.tab3, "Gantt tab")
 
@@ -76,20 +76,20 @@ class GUI(QMainWindow):
 
         layout1 = QVBoxLayout()
 
-        group_box1 = QGroupBox("Wczytaj konfigurację")
+        group_box1 = QGroupBox("Load configuration")
         group_box1.setFixedHeight(200)
 
-        label = QLabel("Nie wybrano żadnego pliku")
+        label = QLabel("No file selected")
 
         hbox_layout = QHBoxLayout()
         vbox_layout = QVBoxLayout()
 
-        read_file_button = AnimatedButton("Wczytaj")
+        read_file_button = AnimatedButton("Load")
         # read_file_button.clicked.connect(self.pb_read_json)
 
         self.file_dialog = FileDialog(label)
 
-        chose_file_button = AnimatedButton("Wybierz plik")
+        chose_file_button = AnimatedButton("Chose a file")
         # chose_file_button.clicked.connect(self.pb_chose_file)
 
         vbox_layout.addWidget(chose_file_button)
@@ -98,27 +98,27 @@ class GUI(QMainWindow):
         hbox_layout.addWidget(label)
         hbox_layout.addLayout(vbox_layout)
 
-        group_box2 = QGroupBox("Panel kontrolny")
+        group_box2 = QGroupBox("Control panel")
         group_box2.setFixedHeight(600)
 
 
         hbox_layout1 = QHBoxLayout()
 
         vbox_layout1 = QVBoxLayout()
-        body_counter_label = self.create_label("Wczytanych korpusów: 0")
-        production_counter_label = self.create_label("Korpusów w produkcji: 0")
-        finished_bodys_label = self.create_label("Wyprodukowanych korpusów: 0")
+        body_counter_label = self.create_label("Loaded bodies: 0")
+        production_counter_label = self.create_label("Bodies in production: 0")
+        finished_bodys_label = self.create_label("Manufactured bodies: 0")
         vbox_layout1.addWidget(body_counter_label)
         vbox_layout1.addWidget(production_counter_label)
         vbox_layout1.addWidget(finished_bodys_label)
 
         vbox_layout2 = QVBoxLayout()
-        self.label_tmp = self.create_label("Brak wybranej ilości")
+        self.label_tmp = self.create_label("No quantity selected")
         vbox_layout2.addWidget(self.label_tmp)
-        chose_value_button = AnimatedButton("Wybierz ilość")
+        chose_value_button = AnimatedButton("Chose quantity")
         # chose_value_button.clicked.connect(self.pb_input_dialog)
         vbox_layout2.addWidget(chose_value_button)
-        produce_button = AnimatedButton("Produkuj")
+        produce_button = AnimatedButton("Manufacture...")
         # produce_button.clicked.connect(self.pb_produce)
         vbox_layout2.addWidget(produce_button)
 
