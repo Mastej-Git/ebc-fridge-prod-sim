@@ -35,6 +35,8 @@ class GanttChart(QWidget):
         ax.set_ylabel("Task", color="white")
         ax.set_title("Gantt Chart", color="white")
 
+        ax.invert_yaxis()
+
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
         for spine in ax.spines.values():
