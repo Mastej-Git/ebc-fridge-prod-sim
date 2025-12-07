@@ -12,7 +12,6 @@ from qt_classes.AnimatedButton import AnimatedButton
 from qt_classes.GanttChart import GanttChart
 from StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
-from PyQt5.QtCore import Qt
 
 class GUI(QMainWindow):
 
