@@ -1,0 +1,26 @@
+{
+    "body": {
+        "cover" : {
+            "material" : "Steel / Alluminium",
+            "color" : "Red / Green / Blue"
+        },
+        "doors" : {
+            "material" : "Steel / Alluminium",
+            "machine" : "Ice / Water",
+            "front_panel" : "True/False"
+        },
+        "shelves" : {
+            "number" : "6 / 7 / 8",
+            "adjustable_height" : "True/False",
+            "material" : "Plastic / Glass"
+        },
+        "cooling_system" : {
+            "type" : "No-Frost / Frost-Free / Static",
+            "energy_class" : "A+++ / A+ / B"
+        },
+        "lighting" : {
+            "internal_lights" : "LED / Fluorescent",
+            "automatic_light_on" : "True/False"
+        }
+    }
+}
