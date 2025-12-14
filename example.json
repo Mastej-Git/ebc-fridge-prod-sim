@@ -1,35 +1,26 @@
 {
     "body": {
         "cover" : {
-            "including_freezer" : "True/False",
-            "material" : "Steel / alluminium",
+            "material" : "Steel / Alluminium",
             "color" : "Red / Green / Blue"
         },
         "doors" : {
-            "material" : "Steel / alluminium",
-            "color" : "Red / Green / Blue",
-            "ice_machine" : "True/False",
-            "water_machine" : "True/False",
+            "material" : "Steel / Alluminium",
+            "machine" : "Ice / Water",
             "front_panel" : "True/False"
         },
         "shelves" : {
-            "material" : "Plastic / Glass",
-            "number" : "Red / Green / Blue",
+            "number" : "6 / 7 / 8",
             "adjustable_height" : "True/False",
-            "removable" : "True/False"
+            "material" : "Plastic / Glass"
         },
         "cooling_system" : {
-            "including_freezer" : "True/False",
             "type" : "No-Frost / Frost-Free / Static",
-            "energy_class" : "A+++ / A++ / A+ / B"
+            "energy_class" : "A+++ / A+ / B"
         },
         "lighting" : {
             "internal_lights" : "LED / Fluorescent",
             "automatic_light_on" : "True/False"
-        },
-        "additional_features" : {
-            "door_alarm" : "True/False",
-            "wifi_connected" : "True/False"
         }
     }
 }
