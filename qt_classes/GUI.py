@@ -12,7 +12,6 @@ from qt_classes.AnimatedButton import AnimatedButton
 from qt_classes.GanttChart import GanttChart
 from StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
-from PyQt5.QtCore import Qt
 
 class GUI(QMainWindow):
 
@@ -33,7 +32,7 @@ class GUI(QMainWindow):
         self.tab2 = QWidget()
         self.tab3 = QWidget()
         self.tabs.addTab(self.tab1, "Tab 1")
-        self.tabs.addTab(self.tab2, "Tab 2")
+        self.tabs.addTab(self.tab2, "Loaded elements")
         self.tabs.addTab(self.tab3, "Gantt tab")
 
         self.create_tab_content()
