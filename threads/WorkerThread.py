@@ -2,7 +2,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 import time
 
 class WorkerThread(QThread):
-    fired = pyqtSignal(str)   # emits transition name when fired
+    fired = pyqtSignal(str)
     finished = pyqtSignal()
 
     def __init__(self, fridge_pn, interval=0.5, parent=None):
@@ -12,7 +12,6 @@ class WorkerThread(QThread):
         self._running = True
 
     def run(self):
-        # self.fridge_pn.fire_transition("T000")
         while self._running:
             for transition in self.fridge_pn.transitions:
                 t = self.fridge_pn.transitions[transition]
