@@ -1,31 +1,27 @@
 from PyQt5.QtWidgets import (
     QMainWindow,
     QTabWidget,
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QGroupBox,
     QFrame,
-    QTextEdit,
-    QListWidget,
-    QListWidgetItem,
-    QSplitter
+    QVBoxLayout,
+    QMessageBox,
+    QFileDialog
 )
 from PyQt5.QtCore import Qt
-from qt_classes.AnimatedButton import AnimatedButton
+from qt_classes.ControlTab import ControlTab
+from qt_classes.LoadedElementsTab import LoadedElementsTab
+from qt_classes.LoggerTab import LoggerTab
 from qt_classes.GanttChart import GanttChart
 from StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
 from utils.json_parser import parse_bodys_json
 import os
 
-class GUI(QMainWindow):
 
+class GUI(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("Tab Example")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 1200, 600)
 
         central_widget = QFrame()
         central_widget.setStyleSheet(StyleSheet.CentralWidget.value)
@@ -35,35 +31,53 @@ class GUI(QMainWindow):
         self.tabs.tabBar().setExpanding(True)
         self.tabs.setStyleSheet(StyleSheet.Tab.value)
 
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-        self.tab3 = QWidget()
-        self.tabs.addTab(self.tab1, "Control Tab")
-        self.tabs.addTab(self.tab2, "Loaded Elements")
-        self.tabs.addTab(self.tab3, "Gantt tab")
+        # Initialize tabs
+        self.control_tab = ControlTab()
+        self.loaded_elements_tab = LoadedElementsTab()
+        self.logger_tab = LoggerTab()
 
-        self.create_tab_content()
+        self.tabs.addTab(self.control_tab, "Control Tab")
+        self.tabs.addTab(self.loaded_elements_tab, "Loaded Elements")
+        self.tabs.addTab(QFrame(), "Gantt tab")  # Placeholder for Gantt
+        self.tabs.addTab(self.logger_tab, "Logger")
+
         layout.addWidget(self.tabs)
         self.setCentralWidget(central_widget)
 
-    def create_tab_content(self):
-        sub_tab_widget = QTabWidget()
-        sub_tab_widget.setTabPosition(QTabWidget.West)
-        sub_tab_widget.setStyleSheet(StyleSheet.SubTab.value)
+        # Data
+        example_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'example.json')
+        self.selected_json_path = example_path
+        self._bodies_list = []
 
-        self.create_dial_tab()
-        self.create_loaded_elements_tab()
+        # Setup file dialog
+        self.file_dialog = FileDialog(self.control_tab.config_label)
 
-        layout3 = QVBoxLayout()
-        self.tab3.setLayout(layout3)
+        # Connect signals
+        self.connect_signals()
 
-        self.create_gantt_tab()  # <-- dodajemy treść do taba 3
+        # Setup Gantt tab
+        self.setup_gantt_tab()
 
-    def create_gantt_tab(self):
-        layout = self.tab3.layout()
-        if layout is None:
-            layout = QVBoxLayout()
-            self.tab3.setLayout(layout)
+        # Initialize label
+        self.update_config_label()
+
+    def connect_signals(self):
+        """Connect all button signals."""
+        self.control_tab.chose_file_button.clicked.connect(self.pb_chose_file)
+        self.control_tab.read_file_button.clicked.connect(self.pb_read_json)
+
+        self.loaded_elements_tab.bodies_list.currentItemChanged.connect(self.on_body_selected)
+        self.loaded_elements_tab.product_button.clicked.connect(self.pb_product_fridge)
+        self.loaded_elements_tab.remove_button.clicked.connect(self.pb_remove_fridge)
+
+        self.logger_tab.clear_button.clicked.connect(self.pb_clear_logger)
+
+    def setup_gantt_tab(self):
+        """Setup the Gantt chart tab."""
+        gantt_tab = self.tabs.widget(2)
+        from PyQt5.QtWidgets import QVBoxLayout
+        layout = QVBoxLayout()
+        gantt_tab.setLayout(layout)
 
         example_tasks = [
             {"task": "Design", "start": 0, "end": 3},
@@ -73,191 +87,162 @@ class GUI(QMainWindow):
         ]
         gantt_widget = GanttChart(example_tasks)
         layout.addWidget(gantt_widget)
-        
-    def create_dial_tab(self):
 
-        layout1 = QVBoxLayout()
+    def update_config_label(self):
+        """Update the config label with the selected file."""
+        try:
+            self.control_tab.config_label.setText(os.path.basename(self.selected_json_path))
+            self.control_tab.config_label.setToolTip(self.selected_json_path)
+        except Exception:
+            pass
 
-        group_box1 = QGroupBox("Load configuration")
-        group_box1.setFixedHeight(200)
+    def pb_chose_file(self):
+        """Open a file dialog to choose a JSON file."""
+        options = QFileDialog.Options()
+        fname, _ = QFileDialog.getOpenFileName(
+            self,
+            "Choose JSON file",
+            "",
+            "JSON Files (*.json);;All Files (*)",
+            options=options
+        )
+        if fname:
+            self.selected_json_path = fname
+            self.update_config_label()
 
-        label = QLabel("No file selected")
-
-        hbox_layout = QHBoxLayout()
-        vbox_layout = QVBoxLayout()
-
-        read_file_button = AnimatedButton("Load")
-        # read_file_button.clicked.connect(self.pb_read_json)
-
-        self.file_dialog = FileDialog(label)
-
-        chose_file_button = AnimatedButton("Chose a file")
-        # chose_file_button.clicked.connect(self.pb_chose_file)
-
-        vbox_layout.addWidget(chose_file_button)
-        vbox_layout.addWidget(read_file_button)
-
-        hbox_layout.addWidget(label)
-        hbox_layout.addLayout(vbox_layout)
-
-        group_box2 = QGroupBox("Control panel")
-        group_box2.setFixedHeight(600)
-
-
-        hbox_layout1 = QHBoxLayout()
-
-        vbox_layout1 = QVBoxLayout()
-        body_counter_label = self.create_label("Loaded bodies: 0")
-        production_counter_label = self.create_label("Bodies in production: 0")
-        finished_bodys_label = self.create_label("Manufactured bodies: 0")
-        vbox_layout1.addWidget(body_counter_label)
-        vbox_layout1.addWidget(production_counter_label)
-        vbox_layout1.addWidget(finished_bodys_label)
-
-        vbox_layout2 = QVBoxLayout()
-        self.label_tmp = self.create_label("No quantity selected")
-        vbox_layout2.addWidget(self.label_tmp)
-        chose_value_button = AnimatedButton("Chose quantity")
-        # chose_value_button.clicked.connect(self.pb_input_dialog)
-        vbox_layout2.addWidget(chose_value_button)
-        produce_button = AnimatedButton("Manufacture...")
-        # produce_button.clicked.connect(self.pb_produce)
-        vbox_layout2.addWidget(produce_button)
-
-        hbox_layout1.addLayout(vbox_layout1)
-        hbox_layout1.addLayout(vbox_layout2)
-
-        group_box2.setLayout(hbox_layout1)
-        group_box1.setLayout(hbox_layout)
-
-        layout1.addWidget(group_box2)
-        layout1.addWidget(group_box1)
-        self.tab1.setLayout(layout1)
-
-    def create_loaded_elements_tab(self):
-        """Create the Loaded Elements tab with clickable list and detail view."""
-        layout2 = QVBoxLayout()
-
-        json_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'bodys.json') # Right now just load the hard-coded file
-        self.bodies_data = parse_bodys_json(json_path)
-
-        splitter = QSplitter(Qt.Horizontal)
-
-        self.bodies_list = QListWidget()
-        self.bodies_list.setStyleSheet("""
-            QListWidget {
-                background-color: #2d2d2d;
-                color: #00ffff;
-                border: 1px solid #404040;
-                font-size: 12pt;
-                padding: 5px;
-            }
-            QListWidget::item {
-                padding: 10px;
-                border-bottom: 1px solid #404040;
-            }
-            QListWidget::item:selected {
-                background-color: #404040;
-                color: #00ff00;
-            }
-            QListWidget::item:hover {
-                background-color: #353535;
-            }
-        """)
-
-        # Populate the list with body items
-        for idx in range(len(self.bodies_data)):
-            item = QListWidgetItem(f"body_{idx + 1}")
-            self.bodies_list.addItem(item)
-
-        self.bodies_list.currentItemChanged.connect(self.on_body_selected)
-
-        self.body_detail_text = QTextEdit()
-        self.body_detail_text.setReadOnly(True)
-        self.body_detail_text.setStyleSheet("""
-            QTextEdit {
-                background-color: #2d2d2d;
-                color: #00ffff;
-                border: 1px solid #404040;
-                padding: 10px;
-                font-family: monospace;
-                font-size: 11pt;
-            }
-        """)
-        self.body_detail_text.setText("Select a body from the list to view details")
-
-        splitter.addWidget(self.bodies_list)
-        splitter.addWidget(self.body_detail_text)
-        splitter.setSizes([200, 600])
-
-        layout2.addWidget(splitter)
-        self.tab2.setLayout(layout2)
-
-    # VIBE CODED SHIT FOR LOADING CAR DATA AT FIRST
-    def on_body_selected(self, current, previous):
-        """Handle body item selection and display details."""
-        if current is None:
+    def pb_read_json(self):
+        """Load the chosen JSON file."""
+        if not self.selected_json_path:
+            QMessageBox.warning(self, "No file chosen", "Please choose a JSON file first.")
             return
 
-        index = self.bodies_list.row(current)
+        try:
+            new_data = parse_bodys_json(self.selected_json_path)
+            if new_data is None:
+                raise ValueError("Parsed data is empty or invalid.")
+            self._normalize_bodies(new_data)
+            self.loaded_elements_tab.populate_list(self._bodies_list, self.format_body_details)
+            self.add_log_entry(f"LOADED: {len(self._bodies_list)} fridges loaded from {os.path.basename(self.selected_json_path)}")
+            self.tabs.setCurrentWidget(self.loaded_elements_tab)
+        except Exception as e:
+            QMessageBox.critical(self, "Load error", f"Failed to load JSON:\n{e}")
 
-        if 0 <= index < len(self.bodies_data):
-            body_data = self.bodies_data[index]
+    def populate_bodies_list(self):
+        """Refresh the list view."""
+        self.loaded_elements_tab.populate_list(self._bodies_list, self.format_body_details)
 
-            detail_text = self.format_body_details(body_data, index + 1)
-            self.body_detail_text.setText(detail_text)
+    def _normalize_bodies(self, data):
+        """Normalize parsed JSON into a list."""
+        if isinstance(data, list):
+            self._bodies_list = data
+        elif isinstance(data, dict):
+            if 'body' in data:
+                self._bodies_list = [data]
+            else:
+                try:
+                    vals = list(data.values())
+                    if all(isinstance(v, dict) for v in vals):
+                        self._bodies_list = vals
+                    else:
+                        self._bodies_list = [data] if data else []
+                except Exception:
+                    self._bodies_list = [data] if data else []
+        else:
+            self._bodies_list = [data] if data else []
+
+    def on_body_selected(self, current, previous):
+        """Handle body selection."""
+        if current is None:
+            return
+        index = self.loaded_elements_tab.bodies_list.row(current)
+        if 0 <= index < len(self._bodies_list):
+            detail_text = self.format_body_details(self._bodies_list[index], index + 1)
+            self.loaded_elements_tab.update_detail_text(detail_text)
 
     def format_body_details(self, body_item, body_num):
         """Format body details for display."""
         output = []
-        output.append(f"{'='*60}")
-        output.append(f"BODY #{body_num}")
-        output.append(f"{'='*60}")
+        output.append(f"{'='*70}")
+        output.append(f"ID: {body_item.get('id', body_num)} - Fridge Body Components")
+        output.append(f"{'='*70}")
 
         if 'body' in body_item:
             body = body_item['body']
 
-            # Upper Panel
-            if 'upper_panel' in body:
-                output.append("\nUpper Panel:")
-                output.append(f"  Controllable: {body['upper_panel'].get('is_controllable', 'N/A')}")
-                output.append(f"  Type: {body['upper_panel'].get('type', 'N/A')}")
+            # Cover
+            if 'cover' in body:
+                output.append("▸ Cover:")
+                cover = body['cover']
+                output.append(f"  ▪  Material: {cover.get('material', 'N/A')}")
+                output.append(f"  ▪  Color: {cover.get('color', 'N/A')}")
 
-            # Framework
-            if 'framework' in body:
-                output.append("\nFramework:")
-                output.append(f"  Material: {body['framework'].get('material', 'N/A')}")
-                output.append(f"  Color: {body['framework'].get('color', 'N/A')}")
+            # Doors
+            if 'doors' in body:
+                output.append("▸ Doors:")
+                doors = body['doors']
+                output.append(f"  ▪  Material: {doors.get('material', 'N/A')}")
+                output.append(f"  ▪  Machine: {doors.get('machine', 'N/A')}")
+                output.append(f"  ▪  Front Panel: {doors.get('front_panel', 'N/A')}")
 
-            # Middle Panel
-            if 'middle_panel' in body:
-                output.append("\nMiddle Panel:")
-                output.append(f"  Functionality: {body['middle_panel'].get('functionality', 'N/A')}")
+            # Shelves
+            if 'shelves' in body:
+                output.append("▸ Shelves:")
+                shelves = body['shelves']
+                output.append(f"  ▪  Number: {shelves.get('number', 'N/A')}")
+                output.append(f"  ▪  Adjustable Height: {shelves.get('adjustable_height', 'N/A')}")
+                output.append(f"  ▪  Material: {shelves.get('material', 'N/A')}")
 
-            # Lower Panel
-            if 'lower_panel' in body:
-                output.append("\nLower Panel:")
-                output.append(f"  Functionality: {body['lower_panel'].get('functionality', 'N/A')}")
-                output.append(f"  Cup Holder: {body['lower_panel'].get('is_cup', 'N/A')}")
-                output.append(f"  Color: {body['lower_panel'].get('color', 'N/A')}")
+            # Cooling System
+            if 'cooling_system' in body:
+                output.append("▸ Cooling System:")
+                cooling = body['cooling_system']
+                output.append(f"  ▪  Type: {cooling.get('type', 'N/A')}")
+                output.append(f"  ▪  Energy Class: {cooling.get('energy_class', 'N/A')}")
 
-            # Armrest
-            if 'armrest' in body:
-                output.append("\nArmrest:")
-                output.append(f"  Heating: {body['armrest'].get('heating', 'N/A')}")
-                output.append(f"  Material: {body['armrest'].get('material', 'N/A')}")
-                output.append(f"  Color: {body['armrest'].get('color', 'N/A')}")
+            # Lighting
+            if 'lighting' in body:
+                output.append("▸ Lighting:")
+                lighting = body['lighting']
+                output.append(f"  ▪  Internal Lights: {lighting.get('internal_lights', 'N/A')}")
+                output.append(f"  ▪  Automatic Light On: {lighting.get('automatic_light_on', 'N/A')}")
 
-            # Cup Holder
-            if 'cup_holder' in body:
-                output.append("\nCup Holder:")
-                output.append(f"  USB Socket: {body['cup_holder'].get('usb_socket', 'N/A')}")
-                output.append(f"  Color: {body['cup_holder'].get('color', 'N/A')}")
-
+        output.append(f"\n{'='*70}\n")
         return "\n".join(output)
 
-    def create_label(self, label_str: str, maximuxm_height: int = 70) -> QLabel:
-        label = QLabel(label_str)
-        label.setStyleSheet(StyleSheet.QLabel.value)
-        label.setMaximumHeight(maximuxm_height)
-        return label
+    def add_log_entry(self, message: str):
+        """Add an entry to the logger."""
+        self.logger_tab.add_entry(message)
+
+    def pb_clear_logger(self):
+        """Clear the logger."""
+        self.logger_tab.clear()
+
+    def pb_product_fridge(self):
+        """Handle product fridge action."""
+        current_item = self.loaded_elements_tab.bodies_list.currentItem()
+        if current_item is None:
+            QMessageBox.warning(self, "No selection", "Please select a fridge to mark as product.")
+            return
+        index = self.loaded_elements_tab.bodies_list.row(current_item)
+        fridge_id = self._bodies_list[index].get('id', index + 1)
+        self.add_log_entry(f"PRODUCTION: Fridge ID {fridge_id} is now in production.")
+        QMessageBox.information(self, "For production", f"Fridge ID {fridge_id} is now in production.")
+
+    def pb_remove_fridge(self):
+        """Handle remove fridge action."""
+        current_item = self.loaded_elements_tab.bodies_list.currentItem()
+        if current_item is None:
+            QMessageBox.warning(self, "No selection", "Please select a fridge to remove.")
+            return
+        index = self.loaded_elements_tab.bodies_list.row(current_item)
+        fridge_id = self._bodies_list[index].get('id', index + 1)
+        reply = QMessageBox.question(self, "Confirm Remove", f"Remove fridge ID {fridge_id}?", QMessageBox.Yes | QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            del self._bodies_list[index]
+            self.add_log_entry(f"REMOVED: Fridge ID {fridge_id} has been removed from production.")
+            self.populate_bodies_list()
+            if self._bodies_list:
+                self.loaded_elements_tab.update_detail_text(self.format_body_details(self._bodies_list[0], 1))
+            else:
+                self.loaded_elements_tab.update_detail_text("No bodies loaded. Use the Control Tab to load a JSON file.")
+            QMessageBox.information(self, "Removed", f"Fridge ID {fridge_id} has been removed.")

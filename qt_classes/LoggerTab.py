@@ -1,0 +1,75 @@
+from PyQt5.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QFrame,
+    QTextEdit
+)
+from qt_classes.AnimatedButton import AnimatedButton
+from datetime import datetime
+
+
+class LoggerTab(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.logger_text = None
+        self.init_ui()
+
+    def init_ui(self):
+        layout4 = QVBoxLayout()
+
+        # Title
+        logger_title = QLabel("Production Logger")
+        logger_title.setStyleSheet("""
+            QLabel {
+                color: #00ffff;
+                font-size: 14pt;
+                font-weight: bold;
+                padding: 10px;
+                border-bottom: 2px solid #00ffff;
+            }
+        """)
+        layout4.addWidget(logger_title)
+
+        # Log display
+        self.logger_text = QTextEdit()
+        self.logger_text.setReadOnly(True)
+        self.logger_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #2d2d2d;
+                color: #00ffff;
+                border: 1px solid #404040;
+                padding: 10px;
+                font-family: monospace;
+                font-size: 11pt;
+            }
+        """)
+        self.logger_text.setText("Production Logger - Ready\n" + "="*70 + "\n")
+        layout4.addWidget(self.logger_text)
+
+        # Control buttons
+        control_panel = QFrame()
+        control_layout = QHBoxLayout(control_panel)
+        control_layout.setContentsMargins(5, 5, 5, 5)
+        control_layout.setSpacing(5)
+
+        self.clear_button = AnimatedButton("Clear Log")
+        control_layout.addStretch()
+        control_layout.addWidget(self.clear_button)
+
+        layout4.addWidget(control_panel)
+        self.setLayout(layout4)
+
+    def add_entry(self, message: str):
+        """Add a new entry to the logger with timestamp."""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_entry = f"[{timestamp}] {message}\n"
+        self.logger_text.append(log_entry)
+        self.logger_text.verticalScrollBar().setValue(
+            self.logger_text.verticalScrollBar().maximum()
+        )
+
+    def clear(self):
+        """Clear the logger."""
+        self.logger_text.setText("Production Logger - Cleared\n" + "="*70 + "\n")

@@ -1,26 +1,407 @@
-{
+[
+  {
+    "id": 1,
     "body": {
-        "cover" : {
-            "material" : "Steel / Alluminium",
-            "color" : "Red / Green / Blue"
-        },
-        "doors" : {
-            "material" : "Steel / Alluminium",
-            "machine" : "Ice / Water",
-            "front_panel" : "True/False"
-        },
-        "shelves" : {
-            "number" : "6 / 7 / 8",
-            "adjustable_height" : "True/False",
-            "material" : "Plastic / Glass"
-        },
-        "cooling_system" : {
-            "type" : "No-Frost / Frost-Free / Static",
-            "energy_class" : "A+++ / A+ / B"
-        },
-        "lighting" : {
-            "internal_lights" : "LED / Fluorescent",
-            "automatic_light_on" : "True/False"
-        }
+      "cover": {
+        "material": "Steel",
+        "color": "Red"
+      },
+      "doors": {
+        "material": "Alluminium",
+        "machine": "Ice",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 7,
+        "adjustable_height": true,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "No-Frost",
+        "energy_class": "A+++"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": true
+      }
     }
-}
+  },
+  {
+    "id": 2,
+    "body": {
+      "cover": {
+        "material": "Alluminium",
+        "color": "Blue"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Water",
+        "front_panel": false
+      },
+      "shelves": {
+        "number": 6,
+        "adjustable_height": false,
+        "material": "Plastic"
+      },
+      "cooling_system": {
+        "type": "Frost-Free",
+        "energy_class": "A+"
+      },
+      "lighting": {
+        "internal_lights": "Fluorescent",
+        "automatic_light_on": false
+      }
+    }
+  },
+  {
+    "id": 3,
+    "body": {
+      "cover": {
+        "material": "Steel",
+        "color": "Green"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Ice",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 8,
+        "adjustable_height": true,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "Static",
+        "energy_class": "B"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": false
+      }
+    }
+  },
+  {
+    "id": 4,
+    "body": {
+      "cover": {
+        "material": "Alluminium",
+        "color": "Red"
+      },
+      "doors": {
+        "material": "Alluminium",
+        "machine": "Water",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 7,
+        "adjustable_height": false,
+        "material": "Plastic"
+      },
+      "cooling_system": {
+        "type": "No-Frost",
+        "energy_class": "A+"
+      },
+      "lighting": {
+        "internal_lights": "Fluorescent",
+        "automatic_light_on": true
+      }
+    }
+  },
+  {
+    "id": 5,
+    "body": {
+      "cover": {
+        "material": "Steel",
+        "color": "Blue"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Ice",
+        "front_panel": false
+      },
+      "shelves": {
+        "number": 6,
+        "adjustable_height": true,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "Frost-Free",
+        "energy_class": "A+++"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": true
+      }
+    }
+  },
+  {
+    "id": 6,
+    "body": {
+      "cover": {
+        "material": "Alluminium",
+        "color": "Green"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Water",
+        "front_panel": false
+      },
+      "shelves": {
+        "number": 8,
+        "adjustable_height": false,
+        "material": "Plastic"
+      },
+      "cooling_system": {
+        "type": "Static",
+        "energy_class": "A+"
+      },
+      "lighting": {
+        "internal_lights": "Fluorescent",
+        "automatic_light_on": false
+      }
+    }
+  },
+  {
+    "id": 7,
+    "body": {
+      "cover": {
+        "material": "Steel",
+        "color": "Red"
+      },
+      "doors": {
+        "material": "Alluminium",
+        "machine": "Water",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 7,
+        "adjustable_height": true,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "No-Frost",
+        "energy_class": "B"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": false
+      }
+    }
+  },
+  {
+    "id": 8,
+    "body": {
+      "cover": {
+        "material": "Alluminium",
+        "color": "Blue"
+      },
+      "doors": {
+        "material": "Alluminium",
+        "machine": "Ice",
+        "front_panel": false
+      },
+      "shelves": {
+        "number": 6,
+        "adjustable_height": false,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "Frost-Free",
+        "energy_class": "A+"
+      },
+      "lighting": {
+        "internal_lights": "Fluorescent",
+        "automatic_light_on": true
+      }
+    }
+  },
+  {
+    "id": 9,
+    "body": {
+      "cover": {
+        "material": "Steel",
+        "color": "Green"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Water",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 8,
+        "adjustable_height": true,
+        "material": "Plastic"
+      },
+      "cooling_system": {
+        "type": "Static",
+        "energy_class": "A+++"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": true
+      }
+    }
+  },
+  {
+    "id": 10,
+    "body": {
+      "cover": {
+        "material": "Alluminium",
+        "color": "Red"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Ice",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 6,
+        "adjustable_height": true,
+        "material": "Plastic"
+      },
+      "cooling_system": {
+        "type": "No-Frost",
+        "energy_class": "A+"
+      },
+      "lighting": {
+        "internal_lights": "Fluorescent",
+        "automatic_light_on": false
+      }
+    }
+  },
+  {
+    "id": 11,
+    "body": {
+      "cover": {
+        "material": "Steel",
+        "color": "Blue"
+      },
+      "doors": {
+        "material": "Alluminium",
+        "machine": "Water",
+        "front_panel": false
+      },
+      "shelves": {
+        "number": 7,
+        "adjustable_height": false,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "Frost-Free",
+        "energy_class": "B"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": true
+      }
+    }
+  },
+  {
+    "id": 12,
+    "body": {
+      "cover": {
+        "material": "Alluminium",
+        "color": "Green"
+      },
+      "doors": {
+        "material": "Alluminium",
+        "machine": "Ice",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 8,
+        "adjustable_height": true,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "Static",
+        "energy_class": "A+"
+      },
+      "lighting": {
+        "internal_lights": "Fluorescent",
+        "automatic_light_on": false
+      }
+    }
+  },
+  {
+    "id": 13,
+    "body": {
+      "cover": {
+        "material": "Steel",
+        "color": "Red"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Ice",
+        "front_panel": false
+      },
+      "shelves": {
+        "number": 6,
+        "adjustable_height": false,
+        "material": "Plastic"
+      },
+      "cooling_system": {
+        "type": "No-Frost",
+        "energy_class": "A+++"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": false
+      }
+    }
+  },
+  {
+    "id": 14,
+    "body": {
+      "cover": {
+        "material": "Alluminium",
+        "color": "Blue"
+      },
+      "doors": {
+        "material": "Steel",
+        "machine": "Water",
+        "front_panel": true
+      },
+      "shelves": {
+        "number": 7,
+        "adjustable_height": true,
+        "material": "Glass"
+      },
+      "cooling_system": {
+        "type": "Frost-Free",
+        "energy_class": "A+"
+      },
+      "lighting": {
+        "internal_lights": "Fluorescent",
+        "automatic_light_on": true
+      }
+    }
+  },
+  {
+    "id": 15,
+    "body": {
+      "cover": {
+        "material": "Steel",
+        "color": "Green"
+      },
+      "doors": {
+        "material": "Alluminium",
+        "machine": "Ice",
+        "front_panel": false
+      },
+      "shelves": {
+        "number": 8,
+        "adjustable_height": false,
+        "material": "Plastic"
+      },
+      "cooling_system": {
+        "type": "Static",
+        "energy_class": "B"
+      },
+      "lighting": {
+        "internal_lights": "LED",
+        "automatic_light_on": true
+      }
+    }
+  }
+]
