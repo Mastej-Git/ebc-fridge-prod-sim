@@ -22,7 +22,7 @@ class GanttChart(QWidget):
 
         if not self.tasks:
             ax.text(0.5, 0.5, "No data to plot",
-                    ha='center', va='center', transform=ax.transAxes, color="white")
+                    ha='center', va='center', transform=ax.transAxes, color="#00ffff")
             self.canvas.draw()
             return
 
@@ -30,16 +30,17 @@ class GanttChart(QWidget):
         start_times = [t["start"] for t in self.tasks]
         durations = [t["end"] - t["start"] for t in self.tasks]
 
-        ax.barh(y_labels, durations, left=start_times, color="#87CEFA")
-        ax.set_xlabel("Time", color="white")
-        ax.set_ylabel("Task", color="white")
-        ax.set_title("Gantt Chart", color="white")
+        ax.barh(y_labels, durations, left=start_times, color="white", zorder=3)
+        ax.set_xlabel("Time", color="#00ffff")
+        ax.set_ylabel("Task", color="#00ffff")
+        ax.set_title("Gantt Chart", color="#00ffff")
 
         ax.invert_yaxis()
+        ax.grid(True, zorder=1, color="#00ffff", alpha=0.3, linewidth=1.5)
 
-        ax.tick_params(axis='x', colors='white')
-        ax.tick_params(axis='y', colors='white')
+        ax.tick_params(axis='x', colors='#00ffff')
+        ax.tick_params(axis='y', colors='#00ffff')
         for spine in ax.spines.values():
-            spine.set_color("white")
+            spine.set_color("#00ffff")
 
         self.canvas.draw()
