@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QFileDialog
 )
-from PyQt5.QtCore import Qt
 from qt_classes.ControlTab import ControlTab
 from qt_classes.LoadedElementsTab import LoadedElementsTab
 from qt_classes.LoggerTab import LoggerTab
