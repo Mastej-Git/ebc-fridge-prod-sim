@@ -31,7 +31,6 @@ class GUI(QMainWindow):
         self.tabs.tabBar().setExpanding(True)
         self.tabs.setStyleSheet(StyleSheet.Tab.value)
 
-        # Initialize tabs
         self.control_tab = ControlTab()
         self.loaded_elements_tab = LoadedElementsTab()
         self.logger_tab = LoggerTab()
@@ -44,21 +43,16 @@ class GUI(QMainWindow):
         layout.addWidget(self.tabs)
         self.setCentralWidget(central_widget)
 
-        # Data
         example_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'example.json')
         self.selected_json_path = example_path
         self._bodies_list = []
 
-        # Setup file dialog
         self.file_dialog = FileDialog(self.control_tab.config_label)
 
-        # Connect signals
         self.connect_signals()
 
-        # Setup Gantt tab
         self.setup_gantt_tab()
 
-        # Initialize label
         self.update_config_label()
 
     def connect_signals(self):
