@@ -23,7 +23,6 @@ class LoadedElementsTab(QWidget):
         layout2 = QVBoxLayout()
         splitter = QSplitter(Qt.Horizontal)
 
-        # Bodies list
         self.bodies_list = QListWidget()
         self.bodies_list.setStyleSheet("""
             QListWidget {
@@ -46,7 +45,6 @@ class LoadedElementsTab(QWidget):
             }
         """)
 
-        # Detail panel
         detail_panel = QWidget()
         detail_layout = QVBoxLayout(detail_panel)
 
@@ -65,7 +63,6 @@ class LoadedElementsTab(QWidget):
         self.body_detail_text.setText("No bodies loaded. Use the Control Tab to load a JSON file.")
         detail_layout.addWidget(self.body_detail_text)
 
-        # Button panel
         button_panel = QFrame()
         button_layout = QHBoxLayout(button_panel)
         button_layout.setContentsMargins(5, 5, 5, 5)
@@ -87,7 +84,6 @@ class LoadedElementsTab(QWidget):
         self.setLayout(layout2)
 
     def populate_list(self, bodies_list, format_func):
-        """Populate the list with bodies."""
         self.bodies_list.clear()
         for idx in range(len(bodies_list)):
             fridge_id = bodies_list[idx].get('id', idx + 1)
@@ -100,5 +96,4 @@ class LoadedElementsTab(QWidget):
             self.body_detail_text.setText("No bodies loaded")
 
     def update_detail_text(self, text):
-        """Update the detail text display."""
         self.body_detail_text.setText(text)

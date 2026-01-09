@@ -162,7 +162,7 @@ fridge_pn1.add_transition("T413", {"P408": 1, "P416": 1}, {"P411": 1, "P415": 1}
 fridge_pn1.add_transition("T414", {"P409": 1}, {"P412": 1})
 fridge_pn1.add_transition("T415", {"P410": 1}, {"P412": 1})
 fridge_pn1.add_transition("T416", {"P411": 1}, {"P412": 1})
-fridge_pn1.add_transition("T417", {"P412": 1}, {"P413": 1, "P417": 1})
+fridge_pn1.add_transition("T417", {"P412": 1}, {"P413": 1, "P416": 1})
 
 fridge_pn1.add_transition("T501", {"P500": 1}, {"P501": 1})
 fridge_pn1.add_transition("T502", {"P501": 1}, {"P502": 1})
