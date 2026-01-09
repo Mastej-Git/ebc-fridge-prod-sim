@@ -33,7 +33,7 @@ class FridgeAttributes:
             PLASTIC = "plastic"
             GLASS = "glass"
 
-        class Number(Enum):
+        class Quantity(Enum):
             SIX = 6
             SEVEN = 7
             EIGHT = 8

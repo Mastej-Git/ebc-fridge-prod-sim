@@ -1,4 +1,4 @@
-class Cover():
+class Cover:
 
     def __init__(self, material: str, color: str):
         self.is_activated = False
