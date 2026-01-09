@@ -36,7 +36,7 @@ class GUI(QMainWindow):
 
         self.tabs.addTab(self.control_tab, "Control Tab")
         self.tabs.addTab(self.loaded_elements_tab, "Loaded Elements")
-        self.tabs.addTab(QFrame(), "Gantt tab")  # Placeholder for Gantt
+        self.tabs.addTab(QFrame(), "Gantt tab")
         self.tabs.addTab(self.logger_tab, "Logger")
 
         layout.addWidget(self.tabs)
@@ -55,7 +55,6 @@ class GUI(QMainWindow):
         self.update_config_label()
 
     def connect_signals(self):
-        """Connect all button signals."""
         self.control_tab.chose_file_button.clicked.connect(self.pb_chose_file)
         self.control_tab.read_file_button.clicked.connect(self.pb_read_json)
 
@@ -66,7 +65,6 @@ class GUI(QMainWindow):
         self.logger_tab.clear_button.clicked.connect(self.pb_clear_logger)
 
     def setup_gantt_tab(self):
-        """Setup the Gantt chart tab."""
         gantt_tab = self.tabs.widget(2)
         from PyQt5.QtWidgets import QVBoxLayout
         layout = QVBoxLayout()
@@ -82,7 +80,6 @@ class GUI(QMainWindow):
         layout.addWidget(gantt_widget)
 
     def update_config_label(self):
-        """Update the config label with the selected file."""
         try:
             self.control_tab.config_label.setText(os.path.basename(self.selected_json_path))
             self.control_tab.config_label.setToolTip(self.selected_json_path)
@@ -90,7 +87,6 @@ class GUI(QMainWindow):
             pass
 
     def pb_chose_file(self):
-        """Open a file dialog to choose a JSON file."""
         options = QFileDialog.Options()
         fname, _ = QFileDialog.getOpenFileName(
             self,
@@ -104,7 +100,6 @@ class GUI(QMainWindow):
             self.update_config_label()
 
     def pb_read_json(self):
-        """Load the chosen JSON file."""
         if not self.selected_json_path:
             QMessageBox.warning(self, "No file chosen", "Please choose a JSON file first.")
             return
@@ -121,11 +116,9 @@ class GUI(QMainWindow):
             QMessageBox.critical(self, "Load error", f"Failed to load JSON:\n{e}")
 
     def populate_bodies_list(self):
-        """Refresh the list view."""
         self.loaded_elements_tab.populate_list(self._bodies_list, self.format_body_details)
 
     def _normalize_bodies(self, data):
-        """Normalize parsed JSON into a list."""
         if isinstance(data, list):
             self._bodies_list = data
         elif isinstance(data, dict):
@@ -144,7 +137,6 @@ class GUI(QMainWindow):
             self._bodies_list = [data] if data else []
 
     def on_body_selected(self, current, previous):
-        """Handle body selection."""
         if current is None:
             return
         index = self.loaded_elements_tab.bodies_list.row(current)
@@ -153,7 +145,6 @@ class GUI(QMainWindow):
             self.loaded_elements_tab.update_detail_text(detail_text)
 
     def format_body_details(self, body_item, body_num):
-        """Format body details for display."""
         output = []
         output.append(f"{'='*70}")
         output.append(f"ID: {body_item.get('id', body_num)} - Fridge Body Components")
@@ -162,14 +153,12 @@ class GUI(QMainWindow):
         if 'body' in body_item:
             body = body_item['body']
 
-            # Cover
             if 'cover' in body:
                 output.append("▸ Cover:")
                 cover = body['cover']
                 output.append(f"  ▪  Material: {cover.get('material', 'N/A')}")
                 output.append(f"  ▪  Color: {cover.get('color', 'N/A')}")
 
-            # Doors
             if 'doors' in body:
                 output.append("▸ Doors:")
                 doors = body['doors']
@@ -177,7 +166,6 @@ class GUI(QMainWindow):
                 output.append(f"  ▪  Machine: {doors.get('machine', 'N/A')}")
                 output.append(f"  ▪  Front Panel: {doors.get('front_panel', 'N/A')}")
 
-            # Shelves
             if 'shelves' in body:
                 output.append("▸ Shelves:")
                 shelves = body['shelves']
@@ -185,14 +173,12 @@ class GUI(QMainWindow):
                 output.append(f"  ▪  Adjustable Height: {shelves.get('adjustable_height', 'N/A')}")
                 output.append(f"  ▪  Material: {shelves.get('material', 'N/A')}")
 
-            # Cooling System
             if 'cooling_system' in body:
                 output.append("▸ Cooling System:")
                 cooling = body['cooling_system']
                 output.append(f"  ▪  Type: {cooling.get('type', 'N/A')}")
                 output.append(f"  ▪  Energy Class: {cooling.get('energy_class', 'N/A')}")
 
-            # Lighting
             if 'lighting' in body:
                 output.append("▸ Lighting:")
                 lighting = body['lighting']
@@ -203,15 +189,12 @@ class GUI(QMainWindow):
         return "\n".join(output)
 
     def add_log_entry(self, message: str):
-        """Add an entry to the logger."""
         self.logger_tab.add_entry(message)
 
     def pb_clear_logger(self):
-        """Clear the logger."""
         self.logger_tab.clear()
 
     def pb_product_fridge(self):
-        """Handle product fridge action."""
         current_item = self.loaded_elements_tab.bodies_list.currentItem()
         if current_item is None:
             QMessageBox.warning(self, "No selection", "Please select a fridge to mark as product.")
@@ -222,7 +205,6 @@ class GUI(QMainWindow):
         QMessageBox.information(self, "For production", f"Fridge ID {fridge_id} is now in production.")
 
     def pb_remove_fridge(self):
-        """Handle remove fridge action."""
         current_item = self.loaded_elements_tab.bodies_list.currentItem()
         if current_item is None:
             QMessageBox.warning(self, "No selection", "Please select a fridge to remove.")

@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 from qt_classes.AnimatedButton import AnimatedButton
+from StyleSheet import StyleSheet
 
 
 class LoadedElementsTab(QWidget):
@@ -24,42 +25,14 @@ class LoadedElementsTab(QWidget):
         splitter = QSplitter(Qt.Horizontal)
 
         self.bodies_list = QListWidget()
-        self.bodies_list.setStyleSheet("""
-            QListWidget {
-                background-color: #2d2d2d;
-                color: #00ffff;
-                border: 1px solid #404040;
-                font-size: 12pt;
-                padding: 5px;
-            }
-            QListWidget::item {
-                padding: 10px;
-                border-bottom: 1px solid #404040;
-            }
-            QListWidget::item:selected {
-                background-color: #404040;
-                color: #00ff00;
-            }
-            QListWidget::item:hover {
-                background-color: #353535;
-            }
-        """)
+        self.bodies_list.setStyleSheet(StyleSheet.QBodiesList.value)
 
         detail_panel = QWidget()
         detail_layout = QVBoxLayout(detail_panel)
 
         self.body_detail_text = QTextEdit()
         self.body_detail_text.setReadOnly(True)
-        self.body_detail_text.setStyleSheet("""
-            QTextEdit {
-                background-color: #2d2d2d;
-                color: #00ffff;
-                border: 1px solid #404040;
-                padding: 10px;
-                font-family: monospace;
-                font-size: 11pt;
-            }
-        """)
+        self.body_detail_text.setStyleSheet(StyleSheet.QBodyDetailText.value)
         self.body_detail_text.setText("No bodies loaded. Use the Control Tab to load a JSON file.")
         detail_layout.addWidget(self.body_detail_text)
 
