@@ -7,8 +7,8 @@ from threads.WorkerThread import WorkerThread
 
 def main():
 
-    fire_thread = WorkerThread(fridge_pn, interval=0.5)
-    fire_thread.start()
+    # fire_thread = WorkerThread(fridge_pn, interval=0.5)
+    # fire_thread.start()
 
     app = QApplication([])
     app.setStyleSheet(StyleSheet.App.value)

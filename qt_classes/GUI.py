@@ -42,8 +42,7 @@ class GUI(QMainWindow):
         layout.addWidget(self.tabs)
         self.setCentralWidget(central_widget)
 
-        example_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'example.json')
-        self.selected_json_path = example_path
+        self.selected_json_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'example.json')
         self._bodies_list = []
 
         self.file_dialog = FileDialog(self.control_tab.config_label)
@@ -119,22 +118,24 @@ class GUI(QMainWindow):
         self.loaded_elements_tab.populate_list(self._bodies_list, self.format_body_details)
 
     def _normalize_bodies(self, data):
-        if isinstance(data, list):
-            self._bodies_list = data
-        elif isinstance(data, dict):
-            if 'body' in data:
-                self._bodies_list = [data]
-            else:
-                try:
-                    vals = list(data.values())
-                    if all(isinstance(v, dict) for v in vals):
-                        self._bodies_list = vals
-                    else:
-                        self._bodies_list = [data] if data else []
-                except Exception:
-                    self._bodies_list = [data] if data else []
-        else:
-            self._bodies_list = [data] if data else []
+        # if isinstance(data, list):
+        #     self._bodies_list = data
+        # elif isinstance(data, dict):
+        #     if 'body' in data:
+        #         self._bodies_list = [data]
+        #     else:
+        #         try:
+        #             vals = list(data.values())
+        #             if all(isinstance(v, dict) for v in vals):
+        #                 self._bodies_list = vals
+        #             else:
+        #                 self._bodies_list = [data] if data else []
+        #         except Exception:
+        #             self._bodies_list = [data] if data else []
+        # else:
+        #     self._bodies_list = [data] if data else []
+        # print(self._bodies_list)
+        pass
 
     def on_body_selected(self, current, previous):
         if current is None:

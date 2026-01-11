@@ -1,17 +1,8 @@
 import json
-from typing import List, Dict, Any
+from typing import Any
 
-# VIBE CODED SHIT FOR LOADING CAR DATA AT FIRST
-def parse_bodys_json(file_path: str) -> List[Dict[str, Any]]:
-    """
-    Parse bodys.json file and return structured data.
 
-    Args:
-        file_path: Path to the JSON file
-
-    Returns:
-        List of body configurations or empty list on error
-    """
+def parse_bodys_json(file_path: str) -> list[dict[str, Any]]:
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -27,15 +18,6 @@ def parse_bodys_json(file_path: str) -> List[Dict[str, Any]]:
         return []
 
 def format_bodys_data(data: List[Dict[str, Any]]) -> str:
-    """
-    Format the parsed body data into a readable string.
-
-    Args:
-        data: List of body configurations
-
-    Returns:
-        Formatted string for display
-    """
     output = []
 
     for idx, item in enumerate(data, 1):
