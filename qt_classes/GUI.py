@@ -22,6 +22,8 @@ class GUI(QMainWindow):
         self.setWindowTitle("Tab Example")
         self.setGeometry(100, 100, 1200, 600)
 
+        self.available_tr = []
+
         central_widget = QFrame()
         central_widget.setStyleSheet(StyleSheet.CentralWidget.value)
         layout = QVBoxLayout(central_widget)

@@ -19,7 +19,6 @@ class LoggerTab(QWidget):
     def init_ui(self):
         layout4 = QVBoxLayout()
 
-        # Title
         logger_title = QLabel("Production Logger")
         logger_title.setStyleSheet("""
             QLabel {
@@ -32,7 +31,6 @@ class LoggerTab(QWidget):
         """)
         layout4.addWidget(logger_title)
 
-        # Log display
         self.logger_text = QTextEdit()
         self.logger_text.setReadOnly(True)
         self.logger_text.setStyleSheet("""
@@ -62,7 +60,6 @@ class LoggerTab(QWidget):
         self.setLayout(layout4)
 
     def add_entry(self, message: str):
-        """Add a new entry to the logger with timestamp."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_entry = f"[{timestamp}] {message}\n"
         self.logger_text.append(log_entry)
@@ -71,5 +68,5 @@ class LoggerTab(QWidget):
         )
 
     def clear(self):
-        """Clear the logger."""
         self.logger_text.setText("Production Logger - Cleared\n" + "="*70 + "\n")
+        
