@@ -36,6 +36,10 @@ class WorkerThread(QThread):
             for transition in tr_to_remove:
                 if transition in self.available_tr:
                     self.available_tr.remove(transition)
+
+                if transition == "T903":
+                    print(f"FINISHED: Fridge: {transition}")
+                    
                     
             time.sleep(self.interval)
         self.finished.emit()

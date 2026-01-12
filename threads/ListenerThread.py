@@ -1,5 +1,6 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 from fridge_parts.Fridge import Fridge
+import time
 
 class Listener(QThread):
     fired = pyqtSignal(str)
@@ -19,6 +20,7 @@ class Listener(QThread):
         while self._running:
             if len(self.set_for_prod) != 0:
                 self.update_available_tr(self.set_for_prod.pop(0))
+            time.sleep(self.interval)
         self.finished.emit()
 
     def stop(self):
