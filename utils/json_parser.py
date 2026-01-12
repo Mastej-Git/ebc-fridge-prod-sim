@@ -17,7 +17,7 @@ def parse_bodys_json(file_path: str) -> list[dict[str, Any]]:
         print(f"Error: {str(e)}")
         return []
 
-def format_bodys_data(data: List[Dict[str, Any]]) -> str:
+def format_bodys_data(data: list[dict[str, Any]]) -> str:
     output = []
 
     for idx, item in enumerate(data, 1):

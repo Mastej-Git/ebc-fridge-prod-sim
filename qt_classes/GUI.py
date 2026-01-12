@@ -118,24 +118,23 @@ class GUI(QMainWindow):
         self.loaded_elements_tab.populate_list(self._bodies_list, self.format_body_details)
 
     def _normalize_bodies(self, data):
-        # if isinstance(data, list):
-        #     self._bodies_list = data
-        # elif isinstance(data, dict):
-        #     if 'body' in data:
-        #         self._bodies_list = [data]
-        #     else:
-        #         try:
-        #             vals = list(data.values())
-        #             if all(isinstance(v, dict) for v in vals):
-        #                 self._bodies_list = vals
-        #             else:
-        #                 self._bodies_list = [data] if data else []
-        #         except Exception:
-        #             self._bodies_list = [data] if data else []
-        # else:
-        #     self._bodies_list = [data] if data else []
-        # print(self._bodies_list)
-        pass
+        if isinstance(data, list):
+            self._bodies_list = data
+        elif isinstance(data, dict):
+            if 'body' in data:
+                self._bodies_list = [data]
+            else:
+                try:
+                    vals = list(data.values())
+                    if all(isinstance(v, dict) for v in vals):
+                        self._bodies_list = vals
+                    else:
+                        self._bodies_list = [data] if data else []
+                except Exception:
+                    self._bodies_list = [data] if data else []
+        else:
+            self._bodies_list = [data] if data else []
+        print(self._bodies_list)
 
     def on_body_selected(self, current, previous):
         if current is None:
