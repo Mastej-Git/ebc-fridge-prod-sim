@@ -80,7 +80,7 @@ class GUI(QMainWindow):
         gantt_tab.setLayout(layout)
 
         example_tasks = [
-            {"task": "Design", "start": 0, "end": 3},
+            {"task": "Design", "start": 0, "end": 0},
         ]
         self.gantt_widget = GanttChart(example_tasks)
         layout.addWidget(self.gantt_widget)
