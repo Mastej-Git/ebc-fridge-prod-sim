@@ -75,8 +75,8 @@ class GUI(QMainWindow):
             {"task": "Testing", "start": 5, "end": 8},
             {"task": "Deployment", "start": 7, "end": 9},
         ]
-        gantt_widget = GanttChart(example_tasks)
-        layout.addWidget(gantt_widget)
+        self.gantt_widget = GanttChart(example_tasks)
+        layout.addWidget(self.gantt_widget)
 
     def update_config_label(self):
         try:
@@ -177,6 +177,12 @@ class GUI(QMainWindow):
         index = self.loaded_elements_tab.bodies_list.row(current_item)
         fridge_id = self._bodies_list[index].body_id
         self.add_log_entry(f"PRODUCTION: Fridge ID {fridge_id} is now in production.")
+        try:
+            if hasattr(self, 'gantt_widget') and self.gantt_widget is not None:
+                self.gantt_widget.update_from_fridges(self._bodies_list, fridge_id)
+        except Exception:
+            pass
+
         QMessageBox.information(self, "For production", f"Fridge ID {fridge_id} is now in production.")
 
     def pb_remove_fridge(self):
