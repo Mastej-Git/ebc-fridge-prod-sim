@@ -14,29 +14,29 @@ class WorkerThread(QThread):
         self._running = True
 
     def run(self):
-        tr_to_exec = []
         while self._running:
-
             if "T002" in self.available_tr:
-                self.logger.add_log_entry(f"STARTED: Production of Fridge ID: .")
+                self.logger.add_entry("STARTED: Production of Fridge.")
+                print("STARTED: Production of Fridge.")
                 fridge_pn1.fire_transition("T001")
                 time.sleep(0.5)
 
-            for transition in self.available_tr:
-                if fridge_pn1.transitions[transition].is_enabled():
-                    tr_to_exec.append(transition)
-
-            for transition in tr_to_exec:
-                if fridge_pn1.transitions[transition].is_enabled() and fridge_pn1.transitions[transition].can_fire():
-                    fridge_pn1.fire_transition(transition)
+            tr_to_remove = []
+            for transition in list(self.available_tr):
+                try:
+                    if transition in fridge_pn1.transitions:
+                        t = fridge_pn1.transitions[transition]
+                        if t.is_enabled() and t.can_fire():
+                            fridge_pn1.fire_transition(transition)
+                            print(f"FIRED: Transition: {transition}")
+                            tr_to_remove.append(transition)
+                except Exception as e:
+                    print(f"Error firing {transition}: {e}")
+            
+            for transition in tr_to_remove:
+                if transition in self.available_tr:
                     self.available_tr.remove(transition)
-            # for transition in self.available_tr:
-            #     t = self.available_tr.transitions[transition]
-
-            #     if t.is_enabled() and t.can_fire():
-            #         self.available_tr.fire_transition(transition)
-            #         print(self.available_tr)
-            #         self.fired.emit(transition)
+                    
             time.sleep(self.interval)
         self.finished.emit()
 

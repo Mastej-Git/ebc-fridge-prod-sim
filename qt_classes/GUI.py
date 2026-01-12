@@ -14,6 +14,8 @@ from StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
 from utils.json_parser import parse_bodys_json
 import os
+from threads.ListenerThread import Listener
+from threads.WorkerThread import WorkerThread
 
 
 class GUI(QMainWindow):
@@ -23,6 +25,7 @@ class GUI(QMainWindow):
         self.setGeometry(100, 100, 1200, 600)
 
         self.available_tr = []
+        self.set_for_prod = []
 
         central_widget = QFrame()
         central_widget.setStyleSheet(StyleSheet.CentralWidget.value)
@@ -35,6 +38,11 @@ class GUI(QMainWindow):
         self.control_tab = ControlTab()
         self.loaded_elements_tab = LoadedElementsTab()
         self.logger_tab = LoggerTab()
+
+        worker_th = WorkerThread(self.available_tr, self.logger_tab, interval=0.5)
+        listener_th = Listener(self.available_tr, self.set_for_prod, interval=0.5)
+        worker_th.start()
+        listener_th.start()
 
         self.tabs.addTab(self.control_tab, "Control Tab")
         self.tabs.addTab(self.loaded_elements_tab, "Loaded Elements")
@@ -182,6 +190,7 @@ class GUI(QMainWindow):
         except Exception:
             pass
 
+        self.set_for_prod.append(self._bodies_list[index])
         QMessageBox.information(self, "For production", f"Fridge ID {fridge_id} is now in production.")
 
     def pb_remove_fridge(self):

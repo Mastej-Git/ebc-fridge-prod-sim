@@ -31,7 +31,7 @@ def parse_bodys_json(file_path: str) -> list[Fridge]:
                     fridge = _create_fridge(item)
                     fridge.check_parts_activation()
                     fridges.append(fridge)
-                    print(fridge) # For debugging purposes
+                    # print(fridge) # For debugging purposes
                 except Exception as e:
                     print(f"Error creating fridge object: {e}")
                     continue
