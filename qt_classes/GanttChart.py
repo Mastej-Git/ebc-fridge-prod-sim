@@ -91,7 +91,12 @@ class GanttChart(QWidget):
 
             elif idx == 5:
                 x=x+0.5
-                if item.get('body', {}).get('doors', {}).get('front_panel', False) == True:
+                front_panel = False
+                if isinstance(item, dict):
+                    front_panel = item.get('body', {}).get('doors', {}).get('front_panel', False)
+                else:
+                    front_panel = getattr(getattr(item, 'doors', None), 'front_panel', False)
+                if front_panel == True:
                     s, e = x, x+m5
                     x=x+m5
                 else:
@@ -101,7 +106,12 @@ class GanttChart(QWidget):
 
             #shelves
             elif idx == 6:
-                if item.get('body', {}).get('shelves', {}).get('adjustable_height', False) == True:
+                adjustable = False
+                if isinstance(item, dict):
+                    adjustable = item.get('body', {}).get('shelves', {}).get('adjustable_height', False)
+                else:
+                    adjustable = getattr(getattr(item, 'shelves', None), 'adjustable', False)
+                if adjustable == True:
                     x=m6+1.5
                 else:
                     x=m6

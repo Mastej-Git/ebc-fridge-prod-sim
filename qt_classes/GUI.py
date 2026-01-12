@@ -71,9 +71,6 @@ class GUI(QMainWindow):
 
         example_tasks = [
             {"task": "Design", "start": 0, "end": 3},
-            {"task": "Implementation", "start": 2, "end": 6},
-            {"task": "Testing", "start": 5, "end": 8},
-            {"task": "Deployment", "start": 7, "end": 9},
         ]
         self.gantt_widget = GanttChart(example_tasks)
         layout.addWidget(self.gantt_widget)
