@@ -16,18 +16,15 @@ class GanttChart(QWidget):
         self.plot_gantt()
 
     def update_from_fridges(self, fridges, selected_index: int = 0):
-        # Ensure previous figure contents are fully cleared before plotting
         self.figure.clf()
         ax = self.figure.add_subplot(111)
         ax.set_facecolor("#2e2e2e")
         self.canvas.draw()
 
         if not fridges:
-            # no plotting and no placeholder text
             self.tasks = []
             return
 
-        # Normalize index: allow 1-based or 0-based inputs
         if 1 <= selected_index <= len(fridges):
             idx = selected_index - 1
         elif 0 <= selected_index < len(fridges):
@@ -37,7 +34,6 @@ class GanttChart(QWidget):
 
         item = fridges[idx]
 
-        # Determine fridge id from possible formats
         fridge_id = None
         if isinstance(item, dict):
             fridge_id = item.get('id')
@@ -51,10 +47,11 @@ class GanttChart(QWidget):
         if fridge_id is None:
             fridge_id = idx + 1
 
-        # Create 11 machine bars labeled M1..M11 with default starts 0..10 and duration 1
         tasks = []
+        #variable for tracking time for components
         x=0
         y=0
+        #variables to define time for each machine
         m1=4
         m2=4
         m3=3
@@ -94,7 +91,12 @@ class GanttChart(QWidget):
 
             elif idx == 5:
                 x=x+0.5
-                if item.get('body', {}).get('doors', {}).get('front_panel', False) == True:
+                front_panel = False
+                if isinstance(item, dict):
+                    front_panel = item.get('body', {}).get('doors', {}).get('front_panel', False)
+                else:
+                    front_panel = getattr(getattr(item, 'doors', None), 'front_panel', False)
+                if front_panel == True:
                     s, e = x, x+m5
                     x=x+m5
                 else:
@@ -104,7 +106,12 @@ class GanttChart(QWidget):
 
             #shelves
             elif idx == 6:
-                if item.get('body', {}).get('shelves', {}).get('adjustable_height', False) == True:
+                adjustable = False
+                if isinstance(item, dict):
+                    adjustable = item.get('body', {}).get('shelves', {}).get('adjustable_height', False)
+                else:
+                    adjustable = getattr(getattr(item, 'shelves', None), 'adjustable', False)
+                if adjustable == True:
                     x=m6+1.5
                 else:
                     x=m6
@@ -149,13 +156,10 @@ class GanttChart(QWidget):
         self.plot_gantt()
 
     def clear_chart(self):
-        # Clear stored tasks
         self.tasks = []
-        # Fully clear the figure to remove any previous artists
         self.figure.clf()
         ax = self.figure.add_subplot(111)
         ax.set_facecolor("#2e2e2e")
-        # Keep axes empty (no labels, ticks or spines)
         ax.set_title("")
         ax.set_xlabel("")
         ax.set_ylabel("")
@@ -166,12 +170,10 @@ class GanttChart(QWidget):
         self.canvas.draw()
 
     def plot_gantt(self):
-        # Create a fresh axes after clearing any previous content to avoid remnants
         self.figure.clf()
         ax = self.figure.add_subplot(111)
         ax.set_facecolor("#2e2e2e")
         if not self.tasks:
-            # empty state: leave canvas blank (no labels/ticks)
             ax.set_title("")
             ax.set_xlabel("")
             ax.set_ylabel("")
@@ -179,7 +181,6 @@ class GanttChart(QWidget):
             ax.set_yticks([])
             for spine in ax.spines.values():
                 spine.set_visible(False)
-            # ensure x-axis starts at 0 even when empty
             try:
                 ax.set_xlim(left=0, right=1)
             except Exception:
@@ -192,7 +193,6 @@ class GanttChart(QWidget):
         durations = [t["end"] - t["start"] for t in self.tasks]
 
         ax.barh(y_labels, durations, left=start_times, color="limegreen", zorder=3)
-        # ensure x-axis begins at 0 and extends to max end + 1
         try:
             max_end = max(t["end"] for t in self.tasks)
             ax.set_xlim(left=0, right=max_end + 1)
