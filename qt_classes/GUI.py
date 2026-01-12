@@ -120,21 +120,9 @@ class GUI(QMainWindow):
     def _normalize_bodies(self, data):
         if isinstance(data, list):
             self._bodies_list = data
-        elif isinstance(data, dict):
-            if 'body' in data:
-                self._bodies_list = [data]
-            else:
-                try:
-                    vals = list(data.values())
-                    if all(isinstance(v, dict) for v in vals):
-                        self._bodies_list = vals
-                    else:
-                        self._bodies_list = [data] if data else []
-                except Exception:
-                    self._bodies_list = [data] if data else []
         else:
             self._bodies_list = [data] if data else []
-        print(self._bodies_list)
+        print(f"Loaded {len(self._bodies_list)} fridges")
 
     def on_body_selected(self, current, previous):
         if current is None:
@@ -147,43 +135,30 @@ class GUI(QMainWindow):
     def format_body_details(self, body_item, body_num):
         output = []
         output.append(f"{'='*70}")
-        output.append(f"ID: {body_item.get('id', body_num)} - Fridge Body Components")
+        output.append(f"ID: {body_item.body_id} - Fridge Body Components")
         output.append(f"{'='*70}")
 
-        if 'body' in body_item:
-            body = body_item['body']
+        output.append("▸ Cover:")
+        output.append(f"  ▪  Material: {body_item.cover.material}")
+        output.append(f"  ▪  Color: {body_item.cover.color}")
 
-            if 'cover' in body:
-                output.append("▸ Cover:")
-                cover = body['cover']
-                output.append(f"  ▪  Material: {cover.get('material', 'N/A')}")
-                output.append(f"  ▪  Color: {cover.get('color', 'N/A')}")
+        output.append("▸ Doors:")
+        output.append(f"  ▪  Material: {body_item.doors.material}")
+        output.append(f"  ▪  Machine: {body_item.doors.machine}")
+        output.append(f"  ▪  Front Panel: {body_item.doors.front_panel}")
 
-            if 'doors' in body:
-                output.append("▸ Doors:")
-                doors = body['doors']
-                output.append(f"  ▪  Material: {doors.get('material', 'N/A')}")
-                output.append(f"  ▪  Machine: {doors.get('machine', 'N/A')}")
-                output.append(f"  ▪  Front Panel: {doors.get('front_panel', 'N/A')}")
+        output.append("▸ Shelves:")
+        output.append(f"  ▪  Number: {body_item.shelves.quantity}")
+        output.append(f"  ▪  Adjustable Height: {body_item.shelves.adjustable}")
+        output.append(f"  ▪  Material: {body_item.shelves.material}")
 
-            if 'shelves' in body:
-                output.append("▸ Shelves:")
-                shelves = body['shelves']
-                output.append(f"  ▪  Number: {shelves.get('number', 'N/A')}")
-                output.append(f"  ▪  Adjustable Height: {shelves.get('adjustable_height', 'N/A')}")
-                output.append(f"  ▪  Material: {shelves.get('material', 'N/A')}")
+        output.append("▸ Cooling System:")
+        output.append(f"  ▪  Type: {body_item.cooling_system.type}")
+        output.append(f"  ▪  Energy Class: {body_item.cooling_system.energy_class}")
 
-            if 'cooling_system' in body:
-                output.append("▸ Cooling System:")
-                cooling = body['cooling_system']
-                output.append(f"  ▪  Type: {cooling.get('type', 'N/A')}")
-                output.append(f"  ▪  Energy Class: {cooling.get('energy_class', 'N/A')}")
-
-            if 'lighting' in body:
-                output.append("▸ Lighting:")
-                lighting = body['lighting']
-                output.append(f"  ▪  Internal Lights: {lighting.get('internal_lights', 'N/A')}")
-                output.append(f"  ▪  Automatic Light On: {lighting.get('automatic_light_on', 'N/A')}")
+        output.append("▸ Lighting:")
+        output.append(f"  ▪  Internal Lights: {body_item.lights.type}")
+        output.append(f"  ▪  Automatic Light On: {body_item.lights.automatic}")
 
         output.append(f"\n{'='*70}\n")
         return "\n".join(output)
@@ -200,7 +175,7 @@ class GUI(QMainWindow):
             QMessageBox.warning(self, "No selection", "Please select a fridge to mark as product.")
             return
         index = self.loaded_elements_tab.bodies_list.row(current_item)
-        fridge_id = self._bodies_list[index].get('id', index + 1)
+        fridge_id = self._bodies_list[index].body_id
         self.add_log_entry(f"PRODUCTION: Fridge ID {fridge_id} is now in production.")
         QMessageBox.information(self, "For production", f"Fridge ID {fridge_id} is now in production.")
 
@@ -210,7 +185,7 @@ class GUI(QMainWindow):
             QMessageBox.warning(self, "No selection", "Please select a fridge to remove.")
             return
         index = self.loaded_elements_tab.bodies_list.row(current_item)
-        fridge_id = self._bodies_list[index].get('id', index + 1)
+        fridge_id = self._bodies_list[index].body_id
         reply = QMessageBox.question(self, "Confirm Remove", f"Remove fridge ID {fridge_id}?", QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
             del self._bodies_list[index]
@@ -220,4 +195,3 @@ class GUI(QMainWindow):
                 self.loaded_elements_tab.update_detail_text(self.format_body_details(self._bodies_list[0], 1))
             else:
                 self.loaded_elements_tab.update_detail_text("No bodies loaded. Use the Control Tab to load a JSON file.")
-            QMessageBox.information(self, "Removed", f"Fridge ID {fridge_id} has been removed.")

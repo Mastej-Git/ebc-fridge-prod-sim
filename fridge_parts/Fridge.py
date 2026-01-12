@@ -46,3 +46,23 @@ class Fridge():
         ):
             return True
         return False
+    
+    def __str__(self) -> str:
+        lines = [f"Fridge ID: {self.body_id}"]
+        
+        if self.cover.is_activated:
+            lines.append(f"  Cover - Material: {self.cover.material}, Color: {self.cover.color}")
+        
+        if self.doors.is_activated:
+            lines.append(f"  Doors - Material: {self.doors.material}, Machine: {self.doors.machine}, Front Panel: {self.doors.front_panel}")
+        
+        if self.shelves.is_activated:
+            lines.append(f"  Shelves - Quantity: {self.shelves.quantity}, Material: {self.shelves.material}, Adjustable: {self.shelves.adjustable}")
+        
+        if self.cooling_system.is_activated:
+            lines.append(f"  Cooling System - Type: {self.cooling_system.type}, Energy Class: {self.cooling_system.energy_class}")
+        
+        if self.lights.is_activated:
+            lines.append(f"  Lights - Type: {self.lights.type}, Automatic: {self.lights.automatic}")
+        
+        return "\n".join(lines)
