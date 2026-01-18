@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
 )
 from qt_classes.AnimatedButton import AnimatedButton
 from datetime import datetime
+from StyleSheet import StyleSheet
 
 
 class LoggerTab(QWidget):
@@ -20,33 +21,15 @@ class LoggerTab(QWidget):
         layout4 = QVBoxLayout()
 
         logger_title = QLabel("Production Logger")
-        logger_title.setStyleSheet("""
-            QLabel {
-                color: #00ffff;
-                font-size: 14pt;
-                font-weight: bold;
-                padding: 10px;
-                border-bottom: 2px solid #00ffff;
-            }
-        """)
+        logger_title.setStyleSheet(StyleSheet.QLoggerTitle.value)
         layout4.addWidget(logger_title)
 
         self.logger_text = QTextEdit()
         self.logger_text.setReadOnly(True)
-        self.logger_text.setStyleSheet("""
-            QTextEdit {
-                background-color: #2d2d2d;
-                color: #00ffff;
-                border: 1px solid #404040;
-                padding: 10px;
-                font-family: monospace;
-                font-size: 11pt;
-            }
-        """)
+        self.logger_text.setStyleSheet(StyleSheet.QLoggerText.value)
         self.logger_text.setText("Production Logger - Ready\n" + "="*70 + "\n")
         layout4.addWidget(self.logger_text)
 
-        # Control buttons
         control_panel = QFrame()
         control_layout = QHBoxLayout(control_panel)
         control_layout.setContentsMargins(5, 5, 5, 5)

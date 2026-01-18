@@ -190,4 +190,25 @@ class StyleSheet(Enum):
             font-size: 11pt;
         }
     """
+
+    QLoggerTitle = """
+        QLabel {
+            color: #00ffff;
+            font-size: 14pt;
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 2px solid #00ffff;
+        }
+    """
+
+    QLoggerText = """
+        QTextEdit {
+            background-color: #2d2d2d;
+            color: #00ffff;
+            border: 1px solid #404040;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 11pt;
+        }
+    """
     
