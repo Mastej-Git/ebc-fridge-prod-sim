@@ -48,10 +48,8 @@ class GanttChart(QWidget):
             fridge_id = idx + 1
 
         tasks = []
-        #variable for tracking time for components
         x=0
         y=0
-        #variables to define time for each machine
         m1=4
         m2=4
         m3=3
@@ -65,7 +63,6 @@ class GanttChart(QWidget):
         m11=5
         for i in range(11):
             idx = i + 1
-            #cover
             if idx == 1:
                 x=1 
                 s, e = x, x+m4
@@ -77,8 +74,7 @@ class GanttChart(QWidget):
                 x=x+m2
                 if x>y:
                     y=x
-                    
-            #doors
+
             elif idx == 3:
                 x=1
                 s, e = x, x+m3
@@ -104,7 +100,6 @@ class GanttChart(QWidget):
                 if x>y:
                     y=x
 
-            #shelves
             elif idx == 6:
                 adjustable = False
                 if isinstance(item, dict):
@@ -120,7 +115,6 @@ class GanttChart(QWidget):
                 if x>y:
                     y=x
 
-            #Cooling system
             elif idx == 7:
                 x=1
                 s, e = x, x+m4
@@ -137,16 +131,14 @@ class GanttChart(QWidget):
                 x=x+m9
                 if x>y:
                     y=x
-            
-            #Lighting
+
             elif idx == 10:
                 x=1
                 s, e = x, x+m10
                 x=x+m10
                 if x>y:
                     y=x
-            
-            #Assembly
+
             else:
                 y=y+0.5
                 s, e = y, y+m11
