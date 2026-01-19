@@ -57,10 +57,9 @@ class Listener(QThread):
         
         front_panel = fridge.doors.front_panel
         if front_panel is True or str(front_panel).lower() == "true":
-            av_fridge_trs.extend(["T209", "T211"])
+            av_fridge_trs.extend(["T209", "T211", "T213"])
         else:
-            av_fridge_trs.extend(["T210"])
-        av_fridge_trs.extend(["T212"])
+            av_fridge_trs.extend(["T210", "T212"])
 
         av_fridge_trs.extend(["T301", "T302"])
         quantity = int(fridge.shelves.quantity) if fridge.shelves.quantity else 0

@@ -1,5 +1,4 @@
 import json
-from typing import Any
 from fridge_parts.Fridge import Fridge
 from fridge_parts.Cover import Cover
 from fridge_parts.Doors import Doors

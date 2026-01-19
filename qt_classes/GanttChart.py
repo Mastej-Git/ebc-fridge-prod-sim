@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
-from PyQt5.QtCore import QThread, pyqtSignal, QTimer
+from PyQt5.QtCore import QThread, pyqtSignal
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -179,7 +179,7 @@ class GanttChart(QWidget):
                     front_panel = item.get('body', {}).get('doors', {}).get('front_panel', False)
                 else:
                     front_panel = getattr(getattr(item, 'doors', None), 'front_panel', False)
-                if front_panel == True:
+                if front_panel is True:
                     s, e = x, x+m5
                     x=x+m5
                 else:
@@ -193,7 +193,7 @@ class GanttChart(QWidget):
                     adjustable = item.get('body', {}).get('shelves', {}).get('adjustable_height', False)
                 else:
                     adjustable = getattr(getattr(item, 'shelves', None), 'adjustable', False)
-                if adjustable == True:
+                if adjustable is True:
                     x=m6+1.5
                 else:
                     x=m6

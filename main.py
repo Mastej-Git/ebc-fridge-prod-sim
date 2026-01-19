@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import QApplication
 from StyleSheet import StyleSheet
 from qt_classes.GUI import GUI
-from petri_net.FridgePetriNet import fridge_pn
-from threads.WorkerThread import WorkerThread
 
 
 def main():
