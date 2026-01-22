@@ -26,6 +26,11 @@ class GUI(QMainWindow):
 
         self.available_tr = []
         self.set_for_prod = []
+        self.fridge_prod_params = {
+            'loaded': 0,
+            'in_prod': 0,
+            'finished': 0,
+        }
 
         central_widget = QFrame()
         central_widget.setStyleSheet(StyleSheet.CentralWidget.value)
@@ -39,15 +44,15 @@ class GUI(QMainWindow):
         self.loaded_elements_tab = LoadedElementsTab()
         self.logger_tab = LoggerTab()
 
-        worker_th = WorkerThread(self.available_tr, self.logger_tab, interval=0.5)
-        listener_th = Listener(self.available_tr, self.set_for_prod, interval=0.5)
-        worker_th.start()
-        listener_th.start()
-
         self.tabs.addTab(self.control_tab, "Control Tab")
         self.tabs.addTab(self.loaded_elements_tab, "Loaded Elements")
         self.tabs.addTab(QFrame(), "Gantt tab")
         self.tabs.addTab(self.logger_tab, "Logger")
+
+        worker_th = WorkerThread(self.available_tr, self.logger_tab, self.fridge_prod_params, self.control_tab, interval=0.5)
+        listener_th = Listener(self.available_tr, self.set_for_prod, interval=0.5)
+        worker_th.start()
+        listener_th.start()
 
         layout.addWidget(self.tabs)
         self.setCentralWidget(central_widget)
@@ -75,7 +80,6 @@ class GUI(QMainWindow):
 
     def setup_gantt_tab(self):
         gantt_tab = self.tabs.widget(2)
-        from PyQt5.QtWidgets import QVBoxLayout
         layout = QVBoxLayout()
         gantt_tab.setLayout(layout)
 
@@ -116,6 +120,8 @@ class GUI(QMainWindow):
                 raise ValueError("Parsed data is empty or invalid.")
             self._normalize_bodies(new_data)
             self.loaded_elements_tab.populate_list(self._bodies_list, self.format_body_details)
+            self.fridge_prod_params['loaded'] = len(self._bodies_list)
+            self.control_tab.body_counter_label.setText(f"Loaded fridges: {self.fridge_prod_params['loaded']}")
             self.add_log_entry(f"LOADED: {len(self._bodies_list)} fridges loaded from {os.path.basename(self.selected_json_path)}")
             self.tabs.setCurrentWidget(self.loaded_elements_tab)
         except Exception as e:
@@ -129,7 +135,7 @@ class GUI(QMainWindow):
             self._bodies_list = data
         else:
             self._bodies_list = [data] if data else []
-        print(f"Loaded {len(self._bodies_list)} fridges")
+        # print(f"Loaded {len(self._bodies_list)} fridges")
 
     def on_body_selected(self, current, previous):
         if current is None:

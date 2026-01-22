@@ -49,9 +49,9 @@ class ControlTab(QWidget):
         hbox_layout1 = QHBoxLayout()
         vbox_layout1 = QVBoxLayout()
 
-        self.body_counter_label = self.create_label("Loaded bodies: 0")
-        self.production_counter_label = self.create_label("Bodies in production: 0")
-        self.finished_bodys_label = self.create_label("Manufactured bodies: 0")
+        self.body_counter_label = self.create_label("Loaded fridges: 0")
+        self.production_counter_label = self.create_label("Fridges in production: 0")
+        self.finished_bodys_label = self.create_label("Manufactured fridges: 0")
         vbox_layout1.addWidget(self.body_counter_label)
         vbox_layout1.addWidget(self.production_counter_label)
         vbox_layout1.addWidget(self.finished_bodys_label)
