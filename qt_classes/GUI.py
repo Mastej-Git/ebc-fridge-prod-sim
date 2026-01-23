@@ -59,8 +59,10 @@ class GUI(QMainWindow):
 
         self.selected_json_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'example.json')
         self._bodies_list = []
+        self._manufactured_fridges = []
 
         self.file_dialog = FileDialog(self.control_tab.config_label)
+        self.control_tab.produce_button.clicked.connect(self.pb_manufacture)
 
         self.connect_signals()
 
@@ -123,7 +125,7 @@ class GUI(QMainWindow):
             self.fridge_prod_params['loaded'] = len(self._bodies_list)
             self.control_tab.body_counter_label.setText(f"Loaded fridges: {self.fridge_prod_params['loaded']}")
             self.add_log_entry(f"LOADED: {len(self._bodies_list)} fridges loaded from {os.path.basename(self.selected_json_path)}")
-            self.tabs.setCurrentWidget(self.loaded_elements_tab)
+            # self.tabs.setCurrentWidget(self.loaded_elements_tab)
         except Exception as e:
             QMessageBox.critical(self, "Load error", f"Failed to load JSON:\n{e}")
 
@@ -215,3 +217,9 @@ class GUI(QMainWindow):
                 self.loaded_elements_tab.update_detail_text(self.format_body_details(self._bodies_list[0], 1))
             else:
                 self.loaded_elements_tab.update_detail_text("No bodies loaded. Use the Control Tab to load a JSON file.")
+
+    def pb_manufacture(self):
+        if self.control_tab.selected_quantity != 0 and len(self._bodies_list) >= self.control_tab.selected_quantity:
+            for i in range(self.control_tab.selected_quantity):
+                self.set_for_prod.append(self._bodies_list[i])
+    
