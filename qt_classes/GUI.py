@@ -190,15 +190,16 @@ class GUI(QMainWindow):
             QMessageBox.warning(self, "No selection", "Please select a fridge to mark as product.")
             return
         index = self.loaded_elements_tab.bodies_list.row(current_item)
-        fridge_id = self._bodies_list[index].body_id
+        fridge = self._bodies_list[index]
+        fridge_id = fridge.body_id
         self.add_log_entry(f"PRODUCTION: Fridge ID {fridge_id} is now in production.")
         try:
             if hasattr(self, 'gantt_widget') and self.gantt_widget is not None:
-                self.gantt_widget.update_from_fridges(self._bodies_list, fridge_id)
-        except Exception:
-            pass
+                self.gantt_widget.add_fridge(fridge, fridge_id)
+        except Exception as e:
+            print(f"Gantt error: {e}")
 
-        self.set_for_prod.append(self._bodies_list[index])
+        self.set_for_prod.append(fridge)
         QMessageBox.information(self, "For production", f"Fridge ID {fridge_id} is now in production.")
 
     def pb_remove_fridge(self):
@@ -221,5 +222,11 @@ class GUI(QMainWindow):
     def pb_manufacture(self):
         if self.control_tab.selected_quantity != 0 and len(self._bodies_list) >= self.control_tab.selected_quantity:
             for i in range(self.control_tab.selected_quantity):
-                self.set_for_prod.append(self._bodies_list[i])
+                fridge = self._bodies_list[i]
+                self.set_for_prod.append(fridge)
+                try:
+                    if hasattr(self, 'gantt_widget') and self.gantt_widget is not None:
+                        self.gantt_widget.add_fridge(fridge, fridge.body_id)
+                except Exception as e:
+                    print(f"Gantt error: {e}")
     
