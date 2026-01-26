@@ -60,6 +60,7 @@ class GanttChart(QWidget):
         layout.addWidget(self.canvas)
 
         self.plot_gantt()
+        self.start_animation(speed=1.0)
 
     def _generate_color(self, fridge_id):
         if fridge_id in self.fridge_colors:
@@ -279,9 +280,6 @@ class GanttChart(QWidget):
             "start_time": base_time
         })
 
-        if self.update_thread is None:
-            self.start_animation(speed=1.0)
-
         self.plot_gantt()
 
     def update_from_fridges(self, fridges, selected_index: int = 0):
@@ -322,73 +320,63 @@ class GanttChart(QWidget):
         ax = self.figure.add_subplot(111)
         ax.set_facecolor("#2e2e2e")
 
-        if not self.fridge_tasks:
-            ax.set_title("")
-            ax.set_xlabel("")
-            ax.set_ylabel("")
-            ax.set_xticks([])
-            ax.set_yticks([])
-            for spine in ax.spines.values():
-                spine.set_visible(False)
-            self.canvas.draw_idle()
-            return
-
         machines = [f"M{i}" for i in range(1, 12)]
         machine_positions = {m: i for i, m in enumerate(machines)}
 
         view_left = self.current_time - self.view_window
         view_right = self.current_time
 
-        active_fridges = []
-        for fridge_data in self.fridge_tasks:
-            fridge_end = max(t["end"] for t in fridge_data["tasks"])
-            if fridge_end >= view_left:
-                active_fridges.append(fridge_data)
+        if self.fridge_tasks:
+            active_fridges = []
+            for fridge_data in self.fridge_tasks:
+                fridge_end = max(t["end"] for t in fridge_data["tasks"])
+                if fridge_end >= view_left:
+                    active_fridges.append(fridge_data)
 
-        self.fridge_tasks = active_fridges
+            self.fridge_tasks = active_fridges
 
-        for fridge_data in self.fridge_tasks:
-            color = fridge_data["color"]
-            for task in fridge_data["tasks"]:
-                start = task["start"]
-                end = task["end"]
-                duration = end - start
+            for fridge_data in self.fridge_tasks:
+                color = fridge_data["color"]
+                for task in fridge_data["tasks"]:
+                    start = task["start"]
+                    end = task["end"]
+                    duration = end - start
 
-                if duration <= 0:
-                    continue
+                    if duration <= 0:
+                        continue
 
-                if end < view_left or start > view_right:
-                    continue
+                    if end < view_left or start > view_right:
+                        continue
 
-                visible_start = max(start, view_left)
-                visible_end = min(end, view_right)
-                visible_duration = visible_end - visible_start
+                    visible_start = max(start, view_left)
+                    visible_end = min(end, view_right)
+                    visible_duration = visible_end - visible_start
 
-                if visible_duration <= 0:
-                    continue
+                    if visible_duration <= 0:
+                        continue
 
-                machine = task["machine"]
-                y_pos = machine_positions.get(machine, 0)
+                    machine = task["machine"]
+                    y_pos = machine_positions.get(machine, 0)
 
-                if self.current_time >= end:
-                    bar_color = color
-                elif self.current_time <= start:
-                    bar_color = "#555555"
-                else:
-                    completed_end = min(self.current_time, visible_end)
-                    completed_start = max(visible_start, start)
-                    if completed_end > completed_start:
-                        ax.barh(y_pos, completed_end - completed_start, left=completed_start,
-                               color=color, zorder=3, height=0.6)
-                    
-                    pending_start = max(self.current_time, visible_start)
-                    pending_end = visible_end
-                    if pending_end > pending_start:
-                        ax.barh(y_pos, pending_end - pending_start, left=pending_start,
-                               color="#555555", zorder=3, height=0.6)
-                    continue
+                    if self.current_time >= end:
+                        bar_color = color
+                    elif self.current_time <= start:
+                        bar_color = "#555555"
+                    else:
+                        completed_end = min(self.current_time, visible_end)
+                        completed_start = max(visible_start, start)
+                        if completed_end > completed_start:
+                            ax.barh(y_pos, completed_end - completed_start, left=completed_start,
+                                   color=color, zorder=3, height=0.6)
+                        
+                        pending_start = max(self.current_time, visible_start)
+                        pending_end = visible_end
+                        if pending_end > pending_start:
+                            ax.barh(y_pos, pending_end - pending_start, left=pending_start,
+                                   color="#555555", zorder=3, height=0.6)
+                        continue
 
-                ax.barh(y_pos, visible_duration, left=visible_start, color=bar_color, zorder=3, height=0.6)
+                    ax.barh(y_pos, visible_duration, left=visible_start, color=bar_color, zorder=3, height=0.6)
 
         ax.axvline(x=self.current_time, color="#ff4444", linewidth=2, linestyle='-', zorder=5)
 
@@ -400,7 +388,7 @@ class GanttChart(QWidget):
 
         ax.set_xlabel("Time", color="#00ffff")
         ax.set_ylabel("Machine", color="#00ffff")
-        ax.set_title(f"Production Timeline (t = {self.current_time:.1f})", color="#00ffff")
+        ax.set_title("Production Timeline", color="#00ffff")
 
         ax.invert_yaxis()
         ax.grid(True, zorder=1, color="#00ffff", alpha=0.3, linewidth=1.5)
