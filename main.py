@@ -5,9 +5,6 @@ from qt_classes.GUI import GUI
 
 def main():
 
-    # fire_thread = WorkerThread(fridge_pn, interval=0.5)
-    # fire_thread.start()
-
     app = QApplication([])
     app.setStyleSheet(StyleSheet.App.value)
     window = GUI()

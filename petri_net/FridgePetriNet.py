@@ -18,7 +18,7 @@ fridge_pn.add_transition("T004", {"P002": 1}, {"P003": 1})
 fridge_pn1 = PetriNet()
 
 
-fridge_pn1.add_place("P000", "Fridge order", tokens=0, ready_tokens=0, max_tokens=50, cooldown_ms=int(0.3*time_unit))
+fridge_pn1.add_place("P000", "Fridge order", tokens=0, ready_tokens=0, max_tokens=50, cooldown_ms=int(0*time_unit))
 fridge_pn1.add_place("P001", "Machine preparation", tokens=0, ready_tokens=0, max_tokens=50, cooldown_ms=int(0.5*time_unit))
 
 fridge_pn1.add_place("P100", "Cover order", tokens=0, ready_tokens=0, max_tokens=50, cooldown_ms=int(0.3*time_unit))

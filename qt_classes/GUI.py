@@ -16,6 +16,7 @@ from utils.json_parser import parse_bodys_json
 import os
 from threads.ListenerThread import Listener
 from threads.WorkerThread import WorkerThread
+import time
 
 
 class GUI(QMainWindow):
@@ -26,6 +27,7 @@ class GUI(QMainWindow):
 
         self.available_tr = []
         self.set_for_prod = []
+        self.production_start_times = []
         self.fridge_prod_params = {
             'loaded': 0,
             'in_prod': 0,
@@ -50,6 +52,7 @@ class GUI(QMainWindow):
         self.tabs.addTab(self.logger_tab, "Logger")
 
         worker_th = WorkerThread(self.available_tr, self.logger_tab, self.fridge_prod_params, self.control_tab, interval=0.5)
+        worker_th.fridge_finished.connect(self.print_finished_prod)
         listener_th = Listener(self.available_tr, self.set_for_prod, interval=0.5)
         worker_th.start()
         listener_th.start()
@@ -150,7 +153,7 @@ class GUI(QMainWindow):
     def format_body_details(self, body_item, body_num):
         output = []
         output.append(f"{'='*70}")
-        output.append(f"ID: {body_item.body_id} - Fridge Body Components")
+        output.append(f"ID: {body_item.id} - Fridge Body Components")
         output.append(f"{'='*70}")
 
         output.append("▸ Cover:")
@@ -191,7 +194,7 @@ class GUI(QMainWindow):
             return
         index = self.loaded_elements_tab.bodies_list.row(current_item)
         fridge = self._bodies_list[index]
-        fridge_id = fridge.body_id
+        fridge_id = fridge.id
         self.add_log_entry(f"PRODUCTION: Fridge ID {fridge_id} is now in production.")
         try:
             if hasattr(self, 'gantt_widget') and self.gantt_widget is not None:
@@ -208,7 +211,7 @@ class GUI(QMainWindow):
             QMessageBox.warning(self, "No selection", "Please select a fridge to remove.")
             return
         index = self.loaded_elements_tab.bodies_list.row(current_item)
-        fridge_id = self._bodies_list[index].body_id
+        fridge_id = self._bodies_list[index].id
         reply = QMessageBox.question(self, "Confirm Remove", f"Remove fridge ID {fridge_id}?", QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
             del self._bodies_list[index]
@@ -223,10 +226,22 @@ class GUI(QMainWindow):
         if self.control_tab.selected_quantity != 0 and len(self._bodies_list) >= self.control_tab.selected_quantity:
             for i in range(self.control_tab.selected_quantity):
                 fridge = self._bodies_list[i]
+                self.print_prod_info(fridge.id)
+                self.production_start_times.append((fridge.id, time.time()))
                 self.set_for_prod.append(fridge)
                 try:
                     if hasattr(self, 'gantt_widget') and self.gantt_widget is not None:
-                        self.gantt_widget.add_fridge(fridge, fridge.body_id)
+                        self.gantt_widget.add_fridge(fridge, fridge.id)
                 except Exception as e:
                     print(f"Gantt error: {e}")
+
+    def print_prod_info(self, fridge_id):
+        self.logger_tab.add_entry(f"STARTED: Production of Fridge: ID: {fridge_id}")
+        print(f"STARTED: Production of Fridge: ID: {fridge_id}")
     
+    def print_finished_prod(self):
+        end_time = time.time()
+        fridge_id, start_time = self.production_start_times.pop(0)
+        duration = end_time - start_time
+        self.logger_tab.add_entry(f"FINISHED: Fridge ID: {fridge_id} produced in {duration:.2f} seconds.")
+        print(f"FINISHED: Fridge ID: {fridge_id} produced in {duration:.2f} seconds.")
