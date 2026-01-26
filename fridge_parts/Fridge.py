@@ -7,14 +7,14 @@ from fridge_parts.Lights import Lights
 class Fridge():
 
     def __init__(
-        self, body_id: int,
+        self, id: int,
         cover: Cover,
         doors: Doors,
         shelves: Shelves,
         cooling_system: CoolingSystem,
         lights: Lights
     ):
-        self.body_id = body_id
+        self.id = id
 
         self.cover = cover
         self.doors = doors
@@ -48,7 +48,7 @@ class Fridge():
         return False
     
     def __str__(self) -> str:
-        lines = [f"Fridge ID: {self.body_id}"]
+        lines = [f"Fridge ID: {self.id}"]
         
         if self.cover.is_activated:
             lines.append(f"  Cover - Material: {self.cover.material}, Color: {self.cover.color}")

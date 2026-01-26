@@ -255,7 +255,7 @@ class GanttChart(QWidget):
                     if isinstance(body, dict):
                         fridge_id = body.get('id')
             else:
-                fridge_id = getattr(fridge_item, 'body_id', None) or getattr(fridge_item, 'id', None)
+                fridge_id = getattr(fridge_item, 'id', None) or getattr(fridge_item, 'id', None)
 
         if fridge_id is None:
             fridge_id = len(self.fridge_tasks) + 1

@@ -37,9 +37,6 @@ class Place(QObject):
         self.ready_tokens += self._tokens
         self._tokens = 0
 
-        # if self.info_terminal != None:
-        #     self.info_terminal.add_text_info(f"Dla Miejsca: {self.name} znaczniki są gotowe")
-
     def __str__(self) -> str:
         return f"Place({self.name}, tokens={self._tokens}, ready_tokens={self.ready_tokens}, max_tokens={self.max_tokens}, cooldown_ms={self.cooldown_ms})"
     

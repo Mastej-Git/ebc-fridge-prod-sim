@@ -59,7 +59,7 @@ class LoadedElementsTab(QWidget):
     def populate_list(self, bodies_list, format_func):
         self.bodies_list.clear()
         for idx in range(len(bodies_list)):
-            fridge_id = bodies_list[idx].body_id
+            fridge_id = bodies_list[idx].id
             item = QListWidgetItem(f"body_{fridge_id}")
             self.bodies_list.addItem(item)
         if bodies_list:

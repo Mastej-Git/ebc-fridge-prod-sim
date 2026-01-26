@@ -50,7 +50,7 @@ def parse_bodys_json(file_path: str) -> list[Fridge]:
 
 def _create_fridge(item: dict) -> Fridge:
     """Create a Fridge object from dictionary data."""
-    body_id = item.get('id', 1)
+    id = item.get('id', 1)
     body = item.get('body', {})
     
     cover_data = body.get('cover', {})
@@ -86,7 +86,7 @@ def _create_fridge(item: dict) -> Fridge:
     )
     
     return Fridge(
-        body_id=body_id,
+        id=id,
         cover=cover,
         doors=doors,
         shelves=shelves,
