@@ -48,7 +48,7 @@ class GUI(QMainWindow):
 
         self.tabs.addTab(self.control_tab, "Control Tab")
         self.tabs.addTab(self.loaded_elements_tab, "Loaded Elements")
-        self.tabs.addTab(QFrame(), "Gantt tab")
+        self.tabs.addTab(QFrame(), "Gantt chart")
         self.tabs.addTab(self.logger_tab, "Logger")
 
         worker_th = WorkerThread(self.available_tr, self.logger_tab, self.fridge_prod_params, self.control_tab, interval=0.5)
@@ -245,3 +245,17 @@ class GUI(QMainWindow):
         duration = end_time - start_time
         self.logger_tab.add_entry(f"FINISHED: Fridge ID: {fridge_id} produced in {duration:.2f} seconds.")
         print(f"FINISHED: Fridge ID: {fridge_id} produced in {duration:.2f} seconds.")
+        
+        for i, fridge in enumerate(self._bodies_list):
+            if fridge.id == fridge_id:
+                del self._bodies_list[i]
+                break
+        
+        self.fridge_prod_params['loaded'] = len(self._bodies_list)
+        self.control_tab.body_counter_label.setText(f"Loaded fridges: {self.fridge_prod_params['loaded']}")
+        
+        self.populate_bodies_list()
+        if self._bodies_list:
+            self.loaded_elements_tab.update_detail_text(self.format_body_details(self._bodies_list[0], 1))
+        else:
+            self.loaded_elements_tab.update_detail_text("No bodies loaded. Use the Control Tab to load a JSON file.")

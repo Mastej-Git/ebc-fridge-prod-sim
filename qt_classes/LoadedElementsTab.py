@@ -33,7 +33,7 @@ class LoadedElementsTab(QWidget):
         self.body_detail_text = QTextEdit()
         self.body_detail_text.setReadOnly(True)
         self.body_detail_text.setStyleSheet(StyleSheet.QBodyDetailText.value)
-        self.body_detail_text.setText("No bodies loaded. Use the Control Tab to load a JSON file.")
+        self.body_detail_text.setText("No fridges loaded. Use the Control Tab to load a JSON file.")
         detail_layout.addWidget(self.body_detail_text)
 
         button_panel = QFrame()
@@ -66,7 +66,7 @@ class LoadedElementsTab(QWidget):
             self.bodies_list.setCurrentRow(0)
             self.body_detail_text.setText(format_func(bodies_list[0], 1))
         else:
-            self.body_detail_text.setText("No bodies loaded")
+            self.body_detail_text.setText("No fridges loaded")
 
     def update_detail_text(self, text):
         self.body_detail_text.setText(text)
