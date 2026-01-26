@@ -17,6 +17,7 @@ import os
 from threads.ListenerThread import Listener
 from threads.WorkerThread import WorkerThread
 import time
+from petri_net.FridgePetriNet import fridge_pn1
 
 
 class GUI(QMainWindow):
@@ -227,6 +228,11 @@ class GUI(QMainWindow):
             for i in range(self.control_tab.selected_quantity):
                 fridge = self._bodies_list[i]
                 self.print_prod_info(fridge.id)
+
+                fridge_pn1.fire_transition("T001")
+                self.fridge_prod_params['in_prod'] += 1
+                
+                self.control_tab.production_counter_label.setText(f"Fridges in production: {self.fridge_prod_params['in_prod']}")
                 self.production_start_times.append((fridge.id, time.time()))
                 self.set_for_prod.append(fridge)
                 try:

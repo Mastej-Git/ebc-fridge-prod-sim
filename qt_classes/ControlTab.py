@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import (
     QGroupBox,
     QInputDialog
 )
-from PyQt5.QtCore import Qt
 from qt_classes.AnimatedButton import AnimatedButton
 from StyleSheet import StyleSheet
 

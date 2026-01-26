@@ -1,6 +1,5 @@
 from petri_net.PetriNet import PetriNet
 
-fridge_pn = PetriNet()
 
 time_unit = 1000
 
