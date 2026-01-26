@@ -119,18 +119,18 @@ class GanttChart(QWidget):
         x = 0
         y = 0
         
-        m1_time = 5.5
-        m2_time = 6.0
-        m3_time = 5.0
-        m4_time = 6.0
-        m5_time = 4.5
-        m6_time = 8.5
+        m1_time = 5.3
+        m2_time = 5.8
+        m3_time = 4.8
+        m4_time = 5.8
+        m5_time = 4.2
+        m6_time = 8.1
         m6_adj_extra = 2.0
-        m7_time = 5.0
-        m8_time = 6.5
-        m9_time = 5.0
-        m10_time = 7.0
-        m11_time = 6.0
+        m7_time = 4.8
+        m8_time = 6.3
+        m9_time = 4.9
+        m10_time = 6.8
+        m11_time = 5.8
 
         cover_start = 1.6
         doors_start = 1.6
