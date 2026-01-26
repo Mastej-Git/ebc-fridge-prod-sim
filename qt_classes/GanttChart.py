@@ -60,6 +60,7 @@ class GanttChart(QWidget):
         layout.addWidget(self.canvas)
 
         self.plot_gantt()
+        self.start_animation(speed=1.0)
 
     def _generate_color(self, fridge_id):
         if fridge_id in self.fridge_colors:
@@ -117,52 +118,60 @@ class GanttChart(QWidget):
         raw_tasks = []
         x = 0
         y = 0
-        m1 = 4
-        m2 = 4
-        m3 = 3
-        m4 = 4
-        m5 = 3
-        m6 = 7
-        m7 = 4
-        m8 = 5
-        m9 = 3
-        m10 = 6
-        m11 = 5
+        
+        m1_time = 5.3
+        m2_time = 5.8
+        m3_time = 4.8
+        m4_time = 5.8
+        m5_time = 4.2
+        m6_time = 8.1
+        m6_adj_extra = 2.0
+        m7_time = 4.8
+        m8_time = 6.3
+        m9_time = 4.9
+        m10_time = 6.8
+        m11_time = 5.8
+
+        cover_start = 1.6
+        doors_start = 1.6
+        shelves_start = 2.0
+        cooling_start = 1.6
+        lights_start = 2.0
 
         for i in range(11):
             idx = i + 1
             if idx == 1:
-                x = 1
-                s, e = x, x + m4
-                x = x + m4
+                x = cover_start
+                s, e = x, x + m1_time
+                x = e
 
             elif idx == 2:
-                x = x + 0.5
-                s, e = x, x + m2
-                x = x + m2
+                x = x + 0.3
+                s, e = x, x + m2_time
+                x = e
                 if x > y:
                     y = x
 
             elif idx == 3:
-                x = 1
-                s, e = x, x + m3
-                x = x + m3
+                x = doors_start
+                s, e = x, x + m3_time
+                x = e
 
             elif idx == 4:
-                x = x + 0.5
-                s, e = x, x + m4
-                x = x + m4
+                x = x + 0.3
+                s, e = x, x + m4_time
+                x = e
 
             elif idx == 5:
-                x = x + 0.5
+                x = x + 0.3
                 front_panel = False
                 if isinstance(item, dict):
                     front_panel = item.get('body', {}).get('doors', {}).get('front_panel', False)
                 else:
                     front_panel = getattr(getattr(item, 'doors', None), 'front_panel', False)
                 if front_panel is True:
-                    s, e = x, x + m5
-                    x = x + m5
+                    s, e = x, x + m5_time
+                    x = e
                 else:
                     s, e = x, x
                 if x > y:
@@ -174,42 +183,41 @@ class GanttChart(QWidget):
                     adjustable = item.get('body', {}).get('shelves', {}).get('adjustable_height', False)
                 else:
                     adjustable = getattr(getattr(item, 'shelves', None), 'adjustable', False)
-                if adjustable is True:
-                    x = m6 + 1.5
-                else:
-                    x = m6
-                s, e = 1, x + 0.5
-                x = x + 0.5
+                
+                shelf_time = m6_time + (m6_adj_extra if adjustable else 0)
+                x = shelves_start
+                s, e = x, x + shelf_time
+                x = e
                 if x > y:
                     y = x
 
             elif idx == 7:
-                x = 1
-                s, e = x, x + m4
-                x = x + m4
+                x = cooling_start
+                s, e = x, x + m7_time
+                x = e
 
             elif idx == 8:
-                x = x + 0.5
-                s, e = x, x + m5
-                x = x + m5
+                x = x + 0.3
+                s, e = x, x + m8_time
+                x = e
 
             elif idx == 9:
-                x = x + 0.5
-                s, e = x, x + m9
-                x = x + m9
+                x = x + 0.3
+                s, e = x, x + m9_time
+                x = e
                 if x > y:
                     y = x
 
             elif idx == 10:
-                x = 1
-                s, e = x, x + m10
-                x = x + m10
+                x = lights_start
+                s, e = x, x + m10_time
+                x = e
                 if x > y:
                     y = x
 
             else:
-                y = y + 0.5
-                s, e = y, y + m11
+                y = y + 0.3
+                s, e = y, y + m11_time
 
             raw_tasks.append({
                 "machine": f"M{idx}",
@@ -272,9 +280,6 @@ class GanttChart(QWidget):
             "start_time": base_time
         })
 
-        if self.update_thread is None:
-            self.start_animation(speed=1.0)
-
         self.plot_gantt()
 
     def update_from_fridges(self, fridges, selected_index: int = 0):
@@ -315,73 +320,63 @@ class GanttChart(QWidget):
         ax = self.figure.add_subplot(111)
         ax.set_facecolor("#2e2e2e")
 
-        if not self.fridge_tasks:
-            ax.set_title("")
-            ax.set_xlabel("")
-            ax.set_ylabel("")
-            ax.set_xticks([])
-            ax.set_yticks([])
-            for spine in ax.spines.values():
-                spine.set_visible(False)
-            self.canvas.draw_idle()
-            return
-
         machines = [f"M{i}" for i in range(1, 12)]
         machine_positions = {m: i for i, m in enumerate(machines)}
 
         view_left = self.current_time - self.view_window
         view_right = self.current_time
 
-        active_fridges = []
-        for fridge_data in self.fridge_tasks:
-            fridge_end = max(t["end"] for t in fridge_data["tasks"])
-            if fridge_end >= view_left:
-                active_fridges.append(fridge_data)
+        if self.fridge_tasks:
+            active_fridges = []
+            for fridge_data in self.fridge_tasks:
+                fridge_end = max(t["end"] for t in fridge_data["tasks"])
+                if fridge_end >= view_left:
+                    active_fridges.append(fridge_data)
 
-        self.fridge_tasks = active_fridges
+            self.fridge_tasks = active_fridges
 
-        for fridge_data in self.fridge_tasks:
-            color = fridge_data["color"]
-            for task in fridge_data["tasks"]:
-                start = task["start"]
-                end = task["end"]
-                duration = end - start
+            for fridge_data in self.fridge_tasks:
+                color = fridge_data["color"]
+                for task in fridge_data["tasks"]:
+                    start = task["start"]
+                    end = task["end"]
+                    duration = end - start
 
-                if duration <= 0:
-                    continue
+                    if duration <= 0:
+                        continue
 
-                if end < view_left or start > view_right:
-                    continue
+                    if end < view_left or start > view_right:
+                        continue
 
-                visible_start = max(start, view_left)
-                visible_end = min(end, view_right)
-                visible_duration = visible_end - visible_start
+                    visible_start = max(start, view_left)
+                    visible_end = min(end, view_right)
+                    visible_duration = visible_end - visible_start
 
-                if visible_duration <= 0:
-                    continue
+                    if visible_duration <= 0:
+                        continue
 
-                machine = task["machine"]
-                y_pos = machine_positions.get(machine, 0)
+                    machine = task["machine"]
+                    y_pos = machine_positions.get(machine, 0)
 
-                if self.current_time >= end:
-                    bar_color = color
-                elif self.current_time <= start:
-                    bar_color = "#555555"
-                else:
-                    completed_end = min(self.current_time, visible_end)
-                    completed_start = max(visible_start, start)
-                    if completed_end > completed_start:
-                        ax.barh(y_pos, completed_end - completed_start, left=completed_start,
-                               color=color, zorder=3, height=0.6)
-                    
-                    pending_start = max(self.current_time, visible_start)
-                    pending_end = visible_end
-                    if pending_end > pending_start:
-                        ax.barh(y_pos, pending_end - pending_start, left=pending_start,
-                               color="#555555", zorder=3, height=0.6)
-                    continue
+                    if self.current_time >= end:
+                        bar_color = color
+                    elif self.current_time <= start:
+                        bar_color = "#555555"
+                    else:
+                        completed_end = min(self.current_time, visible_end)
+                        completed_start = max(visible_start, start)
+                        if completed_end > completed_start:
+                            ax.barh(y_pos, completed_end - completed_start, left=completed_start,
+                                   color=color, zorder=3, height=0.6)
+                        
+                        pending_start = max(self.current_time, visible_start)
+                        pending_end = visible_end
+                        if pending_end > pending_start:
+                            ax.barh(y_pos, pending_end - pending_start, left=pending_start,
+                                   color="#555555", zorder=3, height=0.6)
+                        continue
 
-                ax.barh(y_pos, visible_duration, left=visible_start, color=bar_color, zorder=3, height=0.6)
+                    ax.barh(y_pos, visible_duration, left=visible_start, color=bar_color, zorder=3, height=0.6)
 
         ax.axvline(x=self.current_time, color="#ff4444", linewidth=2, linestyle='-', zorder=5)
 
@@ -393,7 +388,7 @@ class GanttChart(QWidget):
 
         ax.set_xlabel("Time", color="#00ffff")
         ax.set_ylabel("Machine", color="#00ffff")
-        ax.set_title(f"Production Timeline (t = {self.current_time:.1f})", color="#00ffff")
+        ax.set_title("Production Timeline", color="#00ffff")
 
         ax.invert_yaxis()
         ax.grid(True, zorder=1, color="#00ffff", alpha=0.3, linewidth=1.5)
