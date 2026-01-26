@@ -117,52 +117,60 @@ class GanttChart(QWidget):
         raw_tasks = []
         x = 0
         y = 0
-        m1 = 4
-        m2 = 4
-        m3 = 3
-        m4 = 4
-        m5 = 3
-        m6 = 7
-        m7 = 4
-        m8 = 5
-        m9 = 3
-        m10 = 6
-        m11 = 5
+        
+        m1_time = 5.5
+        m2_time = 6.0
+        m3_time = 5.0
+        m4_time = 6.0
+        m5_time = 4.5
+        m6_time = 8.5
+        m6_adj_extra = 2.0
+        m7_time = 5.0
+        m8_time = 6.5
+        m9_time = 5.0
+        m10_time = 7.0
+        m11_time = 6.0
+
+        cover_start = 1.6
+        doors_start = 1.6
+        shelves_start = 2.0
+        cooling_start = 1.6
+        lights_start = 2.0
 
         for i in range(11):
             idx = i + 1
             if idx == 1:
-                x = 1
-                s, e = x, x + m4
-                x = x + m4
+                x = cover_start
+                s, e = x, x + m1_time
+                x = e
 
             elif idx == 2:
-                x = x + 0.5
-                s, e = x, x + m2
-                x = x + m2
+                x = x + 0.3
+                s, e = x, x + m2_time
+                x = e
                 if x > y:
                     y = x
 
             elif idx == 3:
-                x = 1
-                s, e = x, x + m3
-                x = x + m3
+                x = doors_start
+                s, e = x, x + m3_time
+                x = e
 
             elif idx == 4:
-                x = x + 0.5
-                s, e = x, x + m4
-                x = x + m4
+                x = x + 0.3
+                s, e = x, x + m4_time
+                x = e
 
             elif idx == 5:
-                x = x + 0.5
+                x = x + 0.3
                 front_panel = False
                 if isinstance(item, dict):
                     front_panel = item.get('body', {}).get('doors', {}).get('front_panel', False)
                 else:
                     front_panel = getattr(getattr(item, 'doors', None), 'front_panel', False)
                 if front_panel is True:
-                    s, e = x, x + m5
-                    x = x + m5
+                    s, e = x, x + m5_time
+                    x = e
                 else:
                     s, e = x, x
                 if x > y:
@@ -174,42 +182,41 @@ class GanttChart(QWidget):
                     adjustable = item.get('body', {}).get('shelves', {}).get('adjustable_height', False)
                 else:
                     adjustable = getattr(getattr(item, 'shelves', None), 'adjustable', False)
-                if adjustable is True:
-                    x = m6 + 1.5
-                else:
-                    x = m6
-                s, e = 1, x + 0.5
-                x = x + 0.5
+                
+                shelf_time = m6_time + (m6_adj_extra if adjustable else 0)
+                x = shelves_start
+                s, e = x, x + shelf_time
+                x = e
                 if x > y:
                     y = x
 
             elif idx == 7:
-                x = 1
-                s, e = x, x + m4
-                x = x + m4
+                x = cooling_start
+                s, e = x, x + m7_time
+                x = e
 
             elif idx == 8:
-                x = x + 0.5
-                s, e = x, x + m5
-                x = x + m5
+                x = x + 0.3
+                s, e = x, x + m8_time
+                x = e
 
             elif idx == 9:
-                x = x + 0.5
-                s, e = x, x + m9
-                x = x + m9
+                x = x + 0.3
+                s, e = x, x + m9_time
+                x = e
                 if x > y:
                     y = x
 
             elif idx == 10:
-                x = 1
-                s, e = x, x + m10
-                x = x + m10
+                x = lights_start
+                s, e = x, x + m10_time
+                x = e
                 if x > y:
                     y = x
 
             else:
-                y = y + 0.5
-                s, e = y, y + m11
+                y = y + 0.3
+                s, e = y, y + m11_time
 
             raw_tasks.append({
                 "machine": f"M{idx}",
