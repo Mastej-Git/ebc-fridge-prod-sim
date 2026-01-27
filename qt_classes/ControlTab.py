@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
     QInputDialog
 )
 from qt_classes.AnimatedButton import AnimatedButton
-from StyleSheet import StyleSheet
+from elements.StyleSheet import StyleSheet
 
 
 class ControlTab(QWidget):
@@ -61,7 +61,7 @@ class ControlTab(QWidget):
         vbox_layout2.addWidget(self.label_quantity)
         self.chose_value_button = AnimatedButton("Chose quantity")
         self.chose_value_button.clicked.connect(self.show_quantity_dialog)
-        self.produce_button = AnimatedButton("Manufacture...")
+        self.produce_button = AnimatedButton("Manufacture")
         vbox_layout2.addWidget(self.chose_value_button)
         vbox_layout2.addWidget(self.produce_button)
 

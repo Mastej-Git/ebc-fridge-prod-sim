@@ -10,7 +10,7 @@ from qt_classes.ControlTab import ControlTab
 from qt_classes.LoadedElementsTab import LoadedElementsTab
 from qt_classes.LoggerTab import LoggerTab
 from qt_classes.GanttChart import GanttChart
-from StyleSheet import StyleSheet
+from elements.StyleSheet import StyleSheet
 from elements.FileDialog import FileDialog
 from utils.json_parser import parse_bodys_json
 import os
@@ -203,8 +203,13 @@ class GUI(QMainWindow):
         except Exception as e:
             print(f"Gantt error: {e}")
 
+        fridge_pn1.fire_transition("T001")
+        self.fridge_prod_params['in_prod'] += 1
+
+        self.control_tab.production_counter_label.setText(f"Fridges in production: {self.fridge_prod_params['in_prod']}")
+        self.production_start_times.append((fridge.id, time.time()))
         self.set_for_prod.append(fridge)
-        QMessageBox.information(self, "For production", f"Fridge ID {fridge_id} is now in production.")
+        QMessageBox.information(self, "PRODUCTION:", f"Fridge [ID: {fridge_id}] is now in production.")
 
     def pb_remove_fridge(self):
         current_item = self.loaded_elements_tab.bodies_list.currentItem()
@@ -249,8 +254,8 @@ class GUI(QMainWindow):
         end_time = time.time()
         fridge_id, start_time = self.production_start_times.pop(0)
         duration = end_time - start_time
-        self.logger_tab.add_entry(f"FINISHED: Fridge ID: {fridge_id} produced in {duration:.2f} seconds.")
-        print(f"FINISHED: Fridge ID: {fridge_id} produced in {duration:.2f} seconds.")
+        self.logger_tab.add_entry(f"FINISHED: Fridge [ID: {fridge_id}] produced in {duration:.2f} seconds.")
+        print(f"FINISHED: Fridge [ID: {fridge_id}] produced in {duration:.2f} seconds.")
         
         for i, fridge in enumerate(self._bodies_list):
             if fridge.id == fridge_id:

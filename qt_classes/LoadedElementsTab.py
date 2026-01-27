@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 from qt_classes.AnimatedButton import AnimatedButton
-from StyleSheet import StyleSheet
+from elements.StyleSheet import StyleSheet
 
 
 class LoadedElementsTab(QWidget):
@@ -41,7 +41,7 @@ class LoadedElementsTab(QWidget):
         button_layout.setContentsMargins(5, 5, 5, 5)
         button_layout.setSpacing(5)
 
-        self.product_button = AnimatedButton("For production")
+        self.product_button = AnimatedButton("Manufacture")
         self.remove_button = AnimatedButton("Remove")
 
         button_layout.addWidget(self.product_button)

@@ -3,7 +3,7 @@ from PyQt5.QtCore import (QPropertyAnimation,
                           QRect,
                           QEasingCurve)
 
-from StyleSheet import StyleSheet
+from elements.StyleSheet import StyleSheet
 
 class AnimatedButton(QPushButton):
 
