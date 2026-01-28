@@ -1,15 +1,16 @@
 # ebc-fridge-prod-sim
-Project for course on Event Base Control on Wroclaw University of Science and Technology. The project is a visualization app the serves the role of scheduler and visualizer of  tasks needed to create fridges in factory using Discrete Event System (DES) and Petri Nets
+Project for course on Event Base Control at Wroclaw University of Science and Technology. The project is a visualization app the serves the role of scheduler and visualizer of tasks needed to create fridges in factory using Discrete Event System (DES) and Petri Nets
 
 ## Instalation
 
-To run application first make sure that you have `Poetry` and `Python3.10`.
-Then use below commands:
+To run application first make sure that you have `Poetry (version 2.2.0)` and `Python3.10 (or higher)`.
+Then use the commands below:
 
 ```shell
-$ make setup-env
+$ git clone https://github.com/Mastej-Git/ebc-fridge-prod-sim.git
+$ make setup-env 
 $ poetry env activate
-(venv) $ poetry run make run
+(venv) $ make run
 ```
 
 ## Ruff

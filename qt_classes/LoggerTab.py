@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (
 )
 from qt_classes.AnimatedButton import AnimatedButton
 from datetime import datetime
-from StyleSheet import StyleSheet
+from elements.StyleSheet import StyleSheet
 
 
 class LoggerTab(QWidget):
