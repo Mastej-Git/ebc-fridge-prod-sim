@@ -3,7 +3,7 @@ Project for course on Event Base Control at Wroclaw University of Science and Te
 
 ## Instalation
 
-To run application first make sure that you have `Poetry (version 2.2.0)` and `Python3.10 (or higher)`.
+To run application first make sure that you have `Poetry (version 2.2.0 or higher)` and `Python3.10 (or higher)`.
 Then use the commands below:
 
 ```shell
